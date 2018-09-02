@@ -57,7 +57,6 @@ for f in files:
     # Load and pre-process the signature
     filename = os.path.join(signatures_path, f)
     if(f == "Thumbs.db"):
-        print("Continue")
         continue
     print(f)
     original = imread(filename, flatten=1)
