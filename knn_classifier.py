@@ -32,6 +32,8 @@ if len(sys.argv) not in [4,6]:
 signatures_path = sys.argv[1]
 save_path = sys.argv[2]
 model_path = sys.argv[3]
+
+
 if len(sys.argv) == 4:
     canvas_size = (952, 1360)  # Maximum signature size
 else:
@@ -54,6 +56,10 @@ data = list()
 for f in files:
     # Load and pre-process the signature
     filename = os.path.join(signatures_path, f)
+    if(f == "Thumbs.db"):
+        print("Continue")
+        continue
+    print(f)
     original = imread(filename, flatten=1)
     processed = preprocess_signature(original, canvas_size)
 
@@ -64,13 +70,13 @@ for f in files:
     save_filename = os.path.join(save_path, os.path.splitext(f)[0] + '.mat')
     scipy.io.savemat(save_filename, {'feature_vector':feature_vector})
 
-data_test = np.array([data[3], data[1]])
-data = np.array([data[0], data[2]])
-expected = [0, 1]
+data_train = np.array([data[0], data[1], data[2], data[3], data[4], data[15], data[16], data[17], data[18], data[19], data[20], data[21], data[22], data[23], data[24]])
+data_test = np.array([data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[25], data[26], data[27], data[28], data[29]])
+expected = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 for weights in ['uniform', 'distance']:
     # we create an instance of Neighbours Classifier and fit the data.
     clf = neighbors.KNeighborsClassifier(k, weights=weights)
-    clf.fit(data, expected)
+    clf.fit(data_train, expected)
     prediction = clf.predict(data_test)
     print(prediction) # shouldn't error anymore
 
