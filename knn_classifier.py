@@ -23,7 +23,11 @@ import scipy.io
 
 from sklearn import neighbors
 from sklearn.metrics import confusion_matrix
+import random
 
+def should_filter(string):
+    string = string + "/"
+    return string != signatures_folder
 
 if len(sys.argv) not in [5,7]:
     print('Usage: python process_folder.py <signatures_path> <save_path>'
@@ -52,7 +56,6 @@ model_weight_path = 'models/signet.pkl'
 model = CNNModel(signet, model_weight_path)
 
 is_mcyt = dataset_path == "datasets/MCYT/"
-print(is_mcyt)
 paths = os.listdir(signatures_path)
 files_signature = paths[:15] if is_mcyt else paths[:24]
 files_skilled = paths[15:] if is_mcyt else paths[24:]
@@ -162,7 +165,23 @@ for f in paths:
         count_s += 1
         correct_class.append(1)
 
-    
+if(not is_mcyt):
+    dataset_folders = os.listdir(dataset_path)
+    dataset_folders_filtered = filter(should_filter, dataset_folders)
+    dataset_folders_sample = random.sample(dataset_folders_filtered, 10)
+    print("Adding Random to test set (Only for GPDS's dataset)")
+    for p in dataset_folders_sample:
+        f = os.listdir(dataset_path + p)
+        # Load and pre-process the signature
+        filename = os.path.join(dataset_path + p, f[0])
+        original = imread(filename, flatten=1)
+        processed = preprocess_signature(original, canvas_size)
+
+        # Use the CNN to extract features
+        feature_vector = model.get_feature_vector(processed)
+        data.append(feature_vector[0])
+        correct_class.append(1)
+
 
 data_test = np.array(data)
 
@@ -182,4 +201,5 @@ for weights in ['uniform', 'distance']:
     print("true negative: " + str(tn))
     print("false positive: " + str(fp))
     print("false negative: " + str(fn))
+
 
