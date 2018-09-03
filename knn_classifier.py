@@ -22,6 +22,7 @@ import os
 import scipy.io
 
 from sklearn import neighbors
+from sklearn.metrics import confusion_matrix
 
 
 if len(sys.argv) not in [4,6]:
@@ -133,6 +134,7 @@ data = list()
 count_g = 0
 count_s = 0
 print("Generate Test Set")
+correct_class = list()
 for f in paths:
     # Load and pre-process the signature
     filename = os.path.join(signatures_path, f)
@@ -150,8 +152,11 @@ for f in paths:
     data.append(feature_vector[0])
     if("v" in f):
         count_g += 1
+        correct_class.append(0)
     else:
         count_s += 1
+        correct_class.append(1)
+
     
 
 data_test = np.array(data)
@@ -165,6 +170,12 @@ for weights in ['uniform', 'distance']:
     clf = neighbors.KNeighborsClassifier(k, weights=weights)
     clf.fit(data_train, expected)
     prediction = clf.predict(data_test)
-    print("Prediction: " + weights) 
-    print(prediction) 
+    print("Prediction: " + weights)   
+    matrix = confusion_matrix(correct_class, prediction)
+    print(matrix)
+    tn, fp, fn, tp = matrix(correct_class, prediction).ravel()
+    print("true positive: " + str(tp))
+    print("true negative: " + str(tn))
+    print("false positive: " + str(fp))
+    print("false negative: " + str(fn))
 
