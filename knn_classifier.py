@@ -70,7 +70,7 @@ for f in files_signature:
     filename = os.path.join(signatures_path, f)
     if(count == 10):
         break
-    if("v" not in f):
+    if("f" in f):
         continue
     original = imread(filename, flatten=1)
     processed = preprocess_signature(original, canvas_size)
@@ -89,7 +89,7 @@ for index, f in enumerate(files_skilled):
     filename = os.path.join(signatures_path, f)
     if(count == 10):
         break
-    if("v" in f):
+    if("f" not in f):
         continue
     original = imread(filename, flatten=1)
     processed = preprocess_signature(original, canvas_size)
@@ -112,7 +112,7 @@ for p in files_random:
         # Load and pre-process the signature
         if(count == 10):
             break
-        if("v" not in f):
+        if("f" in f):
             continue
         filename = os.path.join(folder_path, f)
         original = imread(filename, flatten=1)
@@ -140,9 +140,9 @@ for f in paths:
     filename = os.path.join(signatures_path, f)
     if(count_g == 5 and count_s == 15):
         break
-    elif("v" in f and count_g == 5):
+    elif("f" not in f and count_g == 5):
         continue
-    elif("v" not in f and count_s == 15):
+    elif("f" in f and count_s == 15):
         continue   
     original = imread(filename, flatten=1)
     processed = preprocess_signature(original, canvas_size)
@@ -150,7 +150,7 @@ for f in paths:
     # Use the CNN to extract features
     feature_vector = model.get_feature_vector(processed)
     data.append(feature_vector[0])
-    if("v" in f):
+    if("f" not in f):
         count_g += 1
         correct_class.append(0)
     else:
