@@ -25,23 +25,23 @@ from sklearn import neighbors
 from sklearn.metrics import confusion_matrix
 
 
-if len(sys.argv) not in [4,6]:
+if len(sys.argv) not in [5,7]:
     print('Usage: python process_folder.py <signatures_path> <save_path> '
           '<model_path> [canvas_size]')
     exit(1)
 
-signatures_folder = "0008/"
 
 dataset_path = sys.argv[1]
+signatures_folder = sys.argv[4]
 signatures_path = dataset_path + signatures_folder
 save_path = sys.argv[2]
 model_path = sys.argv[3]
 
 
-if len(sys.argv) == 4:
+if len(sys.argv) == 5:
     canvas_size = (952, 1360)  # Maximum signature size
 else:
-    canvas_size = (int(sys.argv[4]), int(sys.argv[5]))
+    canvas_size = (int(sys.argv[5]), int(sys.argv[6]))
 
 print('Processing images from folder "%s" and saving to folder "%s"' % (signatures_path, save_path))
 print('Using model %s' % model_path)
