@@ -26,8 +26,8 @@ from sklearn.metrics import confusion_matrix
 
 
 if len(sys.argv) not in [5,7]:
-    print('Usage: python process_folder.py <signatures_path> <save_path> <signature_user_path> '
-          '<model_path> [canvas_size]')
+    print('Usage: python process_folder.py <signatures_path> <save_path>'
+          '<model_path> <signature_user_path> [canvas_size]')
     exit(1)
 
 
