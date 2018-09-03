@@ -61,6 +61,8 @@ k = 1
 data = list()
 expected = list()
 
+print("Generate Train Set")
+print("Adding Genuine")
 count = 0
 for f in files_signature:
     # Load and pre-process the signature
@@ -69,20 +71,18 @@ for f in files_signature:
         break
     if("v" not in f):
         continue
-    print(f)
     original = imread(filename, flatten=1)
     processed = preprocess_signature(original, canvas_size)
 
     # Use the CNN to extract features
     feature_vector = model.get_feature_vector(processed)
     data.append(feature_vector[0])
-    # Save in the matlab format
-    save_filename = os.path.join(save_path, os.path.splitext(f)[0] + '.mat')
-    scipy.io.savemat(save_filename, {'feature_vector':feature_vector})
     count += 1
     expected.append(0)
 
 count = 0
+print("Adding Skilled")
+
 for index, f in enumerate(files_skilled):
     # Load and pre-process the signature
     filename = os.path.join(signatures_path, f)
@@ -90,23 +90,22 @@ for index, f in enumerate(files_skilled):
         break
     if("v" in f):
         continue
-    print(f)
     original = imread(filename, flatten=1)
     processed = preprocess_signature(original, canvas_size)
     # Use the CNN to extract features
     feature_vector = model.get_feature_vector(processed)
     data.append(feature_vector[0])
-    # Save in the matlab format
-    save_filename = os.path.join(save_path, os.path.splitext(f)[0] + '.mat')
-    scipy.io.savemat(save_filename, {'feature_vector':feature_vector})
     count += 1
     expected.append(1)
 
+print("Adding Random")
 
 for p in files_random:
+    validate_p = p + "/"
+    if(validate_p == signatures_folder):
+        continue
     folder_path = dataset_path + p
     folder = os.listdir(folder_path)
-    print(folder)
     count = 0 
     for f in folder:
         # Load and pre-process the signature
@@ -115,28 +114,53 @@ for p in files_random:
         if("v" not in f):
             continue
         filename = os.path.join(folder_path, f)
-        print(f)
         original = imread(filename, flatten=1)
         processed = preprocess_signature(original, canvas_size)
 
         # Use the CNN to extract features
         feature_vector = model.get_feature_vector(processed)
         data.append(feature_vector[0])
-        # Save in the matlab format
-        save_filename = os.path.join(save_path, os.path.splitext(f)[0] + '.mat')
-        scipy.io.savemat(save_filename, {'feature_vector':feature_vector})
         count += 1
         expected.append(1)
 
 
 
-print(data)
 data_train = np.array(data)
-data_test = np.array([data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[25], data[26], data[27], data[28], data[29]])
+
+
+data = list()
+
+count_g = 0
+count_s = 0
+print("Generate Test Set")
+for f in paths:
+    # Load and pre-process the signature
+    filename = os.path.join(signatures_path, f)
+    if(count_g == 5 and count_s == 15):
+        break
+    elif("v" in f and count_g == 5):
+        continue
+    elif("v" not in f and count_s == 15):
+        continue   
+    original = imread(filename, flatten=1)
+    processed = preprocess_signature(original, canvas_size)
+
+    # Use the CNN to extract features
+    feature_vector = model.get_feature_vector(processed)
+    data.append(feature_vector[0])
+    if("v" in f):
+        count_g += 1
+    else:
+        count_s += 1
+    
+
+data_test = np.array(data)
+print("KNN Classifier") 
 for weights in ['uniform', 'distance']:
     # we create an instance of Neighbours Classifier and fit the data.
     clf = neighbors.KNeighborsClassifier(k, weights=weights)
     clf.fit(data_train, expected)
     prediction = clf.predict(data_test)
-    print(prediction) # shouldn't error anymore
+    print("Prediction: " + weights) 
+    print(prediction) 
 
