@@ -25,9 +25,12 @@ from sklearn import neighbors
 from sklearn.metrics import confusion_matrix
 import random
 
-def should_filter(string):
+def filter_dataset_folders(string):
     string = string + "/"
     return string != signatures_folder
+
+def filter_genuine(string):
+    return ("f" not in string) and (".mat" not in string) and (".db" not in string)
 
 if len(sys.argv) not in [5,7]:
     print('Usage: python process_folder.py <signatures_path> <save_path>'
@@ -167,13 +170,15 @@ for f in paths:
 
 if(not is_mcyt):
     dataset_folders = os.listdir(dataset_path)
-    dataset_folders_filtered = filter(should_filter, dataset_folders)
+    dataset_folders_filtered = filter(filter_dataset_folders, dataset_folders)
     dataset_folders_sample = random.sample(dataset_folders_filtered, 10)
     print("Adding Random to test set (Only for GPDS's dataset)")
     for p in dataset_folders_sample:
         f = os.listdir(dataset_path + p)
         # Load and pre-process the signature
-        filename = os.path.join(dataset_path + p, f[0])
+        f_filtered = filter(filter_genuine, f)
+        f_sample = random.sample(f_filtered, 1)[0]
+        filename = os.path.join(dataset_path + p, f_sample)
         original = imread(filename, flatten=1)
         processed = preprocess_signature(original, canvas_size)
 
