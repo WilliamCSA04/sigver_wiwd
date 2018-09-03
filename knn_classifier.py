@@ -155,6 +155,10 @@ for f in paths:
     
 
 data_test = np.array(data)
+
+print("Size of train set: " + str(len(data_train)))
+print("Size of test set: " + str(len(data_test)))
+
 print("KNN Classifier") 
 for weights in ['uniform', 'distance']:
     # we create an instance of Neighbours Classifier and fit the data.
