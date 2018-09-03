@@ -29,7 +29,10 @@ if len(sys.argv) not in [4,6]:
           '<model_path> [canvas_size]')
     exit(1)
 
-signatures_path = sys.argv[1]
+signatures_folder = "0008/"
+
+dataset_path = sys.argv[1]
+signatures_path = dataset_path + signatures_folder
 save_path = sys.argv[2]
 model_path = sys.argv[3]
 
@@ -47,16 +50,24 @@ print('Using canvas size: %s' % (canvas_size,))
 model_weight_path = 'models/signet.pkl'
 model = CNNModel(signet, model_weight_path)
 
-files = os.listdir(signatures_path)
+paths = os.listdir(signatures_path)
+files_signature = paths[:15]
+files_skilled = paths[15:]
+files_random = os.listdir(dataset_path)
 
 # Note: it there is a large number of signatures to process, it is faster to
 # process them in batches (i.e. use "get_feature_vector_multiple")
 k = 1
 data = list()
-for f in files:
+expected = list()
+
+count = 0
+for f in files_signature:
     # Load and pre-process the signature
     filename = os.path.join(signatures_path, f)
-    if(f == "Thumbs.db"):
+    if(count == 10):
+        break
+    if("v" not in f):
         continue
     print(f)
     original = imread(filename, flatten=1)
@@ -68,10 +79,60 @@ for f in files:
     # Save in the matlab format
     save_filename = os.path.join(save_path, os.path.splitext(f)[0] + '.mat')
     scipy.io.savemat(save_filename, {'feature_vector':feature_vector})
+    count += 1
+    expected.append(0)
 
-data_train = np.array([data[0], data[1], data[2], data[3], data[4], data[15], data[16], data[17], data[18], data[19], data[20], data[21], data[22], data[23], data[24]])
+count = 0
+for index, f in enumerate(files_skilled):
+    # Load and pre-process the signature
+    filename = os.path.join(signatures_path, f)
+    if(count == 10):
+        break
+    if("v" in f):
+        continue
+    print(f)
+    original = imread(filename, flatten=1)
+    processed = preprocess_signature(original, canvas_size)
+    # Use the CNN to extract features
+    feature_vector = model.get_feature_vector(processed)
+    data.append(feature_vector[0])
+    # Save in the matlab format
+    save_filename = os.path.join(save_path, os.path.splitext(f)[0] + '.mat')
+    scipy.io.savemat(save_filename, {'feature_vector':feature_vector})
+    count += 1
+    expected.append(1)
+
+
+for p in files_random:
+    folder_path = dataset_path + p
+    folder = os.listdir(folder_path)
+    print(folder)
+    count = 0 
+    for f in folder:
+        # Load and pre-process the signature
+        if(count == 10):
+            break
+        if("v" not in f):
+            continue
+        filename = os.path.join(folder_path, f)
+        print(f)
+        original = imread(filename, flatten=1)
+        processed = preprocess_signature(original, canvas_size)
+
+        # Use the CNN to extract features
+        feature_vector = model.get_feature_vector(processed)
+        data.append(feature_vector[0])
+        # Save in the matlab format
+        save_filename = os.path.join(save_path, os.path.splitext(f)[0] + '.mat')
+        scipy.io.savemat(save_filename, {'feature_vector':feature_vector})
+        count += 1
+        expected.append(1)
+
+
+
+print(data)
+data_train = np.array(data)
 data_test = np.array([data[5], data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[25], data[26], data[27], data[28], data[29]])
-expected = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 for weights in ['uniform', 'distance']:
     # we create an instance of Neighbours Classifier and fit the data.
     clf = neighbors.KNeighborsClassifier(k, weights=weights)
