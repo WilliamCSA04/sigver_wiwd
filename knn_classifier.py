@@ -51,9 +51,11 @@ print('Using canvas size: %s' % (canvas_size,))
 model_weight_path = 'models/signet.pkl'
 model = CNNModel(signet, model_weight_path)
 
+is_mcyt = dataset_path == "datasets/MCYT/"
+print(is_mcyt)
 paths = os.listdir(signatures_path)
-files_signature = paths[:15]
-files_skilled = paths[15:]
+files_signature = paths[:15] if is_mcyt else paths[:24]
+files_skilled = paths[15:] if is_mcyt else paths[24:]
 files_random = os.listdir(dataset_path)
 
 # Note: it there is a large number of signatures to process, it is faster to
@@ -65,10 +67,11 @@ expected = list()
 print("Generate Train Set")
 print("Adding Genuine")
 count = 0
+limit = 10 if is_mcyt else 14
 for f in files_signature:
     # Load and pre-process the signature
     filename = os.path.join(signatures_path, f)
-    if(count == 10):
+    if(count == limit):
         break
     if("f" in f):
         continue
@@ -87,7 +90,7 @@ print("Adding Skilled")
 for index, f in enumerate(files_skilled):
     # Load and pre-process the signature
     filename = os.path.join(signatures_path, f)
-    if(count == 10):
+    if(count == limit):
         break
     if("f" not in f):
         continue
@@ -110,7 +113,7 @@ for p in files_random:
     count = 0 
     for f in folder:
         # Load and pre-process the signature
-        if(count == 10):
+        if(count == limit):
             break
         if("f" in f):
             continue
@@ -133,16 +136,18 @@ data = list()
 
 count_g = 0
 count_s = 0
+limit_g = 5 if is_mcyt else 10
+limit_s = 15 if is_mcyt else 10
 print("Generate Test Set")
 correct_class = list()
 for f in paths:
     # Load and pre-process the signature
     filename = os.path.join(signatures_path, f)
-    if(count_g == 5 and count_s == 15):
+    if(count_g == limit_g and count_s == limit_s):
         break
-    elif("f" not in f and count_g == 5):
+    elif("f" not in f and count_g == limit_g):
         continue
-    elif("f" in f and count_s == 15):
+    elif("f" in f and count_s == limit_s):
         continue   
     original = imread(filename, flatten=1)
     processed = preprocess_signature(original, canvas_size)
