@@ -21,9 +21,6 @@ import sys
 import os
 import scipy.io
 
-from sklearn import neighbors
-
-
 if len(sys.argv) not in [4,6]:
     print('Usage: python process_folder.py <signatures_path> <save_path> '
           '<model_path> [canvas_size]')
