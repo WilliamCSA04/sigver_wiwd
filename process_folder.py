@@ -20,6 +20,7 @@ import numpy as np
 import sys
 import os
 import scipy.io
+import knn_classifier as knn
 
 if len(sys.argv) not in [4,6]:
     print('Usage: python process_folder.py <signatures_path> <save_path> '
@@ -152,3 +153,5 @@ for f in paths:
     
 
 data_test = np.array(data)
+
+knn.knn(data_train, data_test, expected)
