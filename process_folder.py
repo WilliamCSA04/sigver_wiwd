@@ -155,3 +155,6 @@ for f in paths:
 data_test = np.array(data)
 
 classifier.knn(data_train, data_test, expected)
+classifier.svm(data_train, data_test, expected)
+classifier.mlp(data_train, data_test, expected)
+classifier.tree(data_train, data_test, expected)
