@@ -1,6 +1,7 @@
 from sklearn import neighbors
 from sklearn import tree
 from sklearn import svm
+from sklearn.neural_network import MLPClassifier
 
 def knn(data_train, data_test, expected, k = 1, weigths=['uniform', 'distance']):
     print("KNN Classifier")
@@ -24,4 +25,11 @@ def svm(data_train, data_test, expected):
     clf.fit(data_train, expected)
     prediction = clf.predict(data_test)
     print("Prediction SVM: ") 
+    print(prediction)
+
+def mlp(data_train, data_test, expected, solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1):
+    clf = MLPClassifier(solver=solver, alpha=alpha, hidden_layer_sizes=hidden_layer_sizes, random_state=random_state)
+    clf.fit(data_train, expected)
+    prediction = clf.predict(data_test)
+    print("Prediction MLP: ") 
     print(prediction)
