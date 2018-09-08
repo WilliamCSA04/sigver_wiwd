@@ -9,7 +9,7 @@ def knn(data_train, data_test, expected, k = 1, weigths=['uniform', 'distance'])
         clf = neighbors.KNeighborsClassifier(k, weights=weight)
         clf.fit(data_train, expected)
         prediction = clf.predict(data_test)
-        print("Prediction: " + weight) 
+        print("Prediction KNN: " + weight) 
         print(prediction) 
 
 def tree(data_train, data_test, expected):
@@ -23,5 +23,5 @@ def svm(data_train, data_test, expected):
     clf = svm.SVC()
     clf.fit(data_train, expected)
     prediction = clf.predict(data_test)
-    print("Prediction Tree: ") 
+    print("Prediction SVM: ") 
     print(prediction)
