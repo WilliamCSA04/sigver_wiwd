@@ -84,7 +84,7 @@ for f in files_signature:
     feature_vector = model.get_feature_vector(processed)
     data.append(feature_vector[0])
     count += 1
-    expected.append(0)
+    expected.append(1)
 
 count = 0
 print("Adding Skilled")
@@ -102,7 +102,7 @@ for index, f in enumerate(files_skilled):
     feature_vector = model.get_feature_vector(processed)
     data.append(feature_vector[0])
     count += 1
-    expected.append(1)
+    expected.append(0)
 
 print("Adding Random")
 
@@ -127,7 +127,7 @@ for p in files_random:
         feature_vector = model.get_feature_vector(processed)
         data.append(feature_vector[0])
         count += 1
-        expected.append(1)
+        expected.append(0)
 
 
 
@@ -159,10 +159,10 @@ for f in paths:
     data.append(feature_vector[0])
     if("f" not in f):
         count_g += 1
-        correct_class.append(0)
+        correct_class.append(1)
     else:
         count_s += 1
-        correct_class.append(1)
+        correct_class.append(0)
 
 if(not is_mcyt):
     dataset_folders = os.listdir(dataset_path)
@@ -181,7 +181,7 @@ if(not is_mcyt):
         # Use the CNN to extract features
         feature_vector = model.get_feature_vector(processed)
         data.append(feature_vector[0])
-        correct_class.append(1)
+        correct_class.append(0)
 
 
 data_test = np.array(data)
@@ -189,7 +189,7 @@ data_test = np.array(data)
 print("Correctly data test classes: ")
 print(correct_class)
 
-classifier.knn(data_train, data_test, expected)
-classifier.svm(data_train, data_test, expected)
-classifier.mlp(data_train, data_test, expected)
-classifier.tree(data_train, data_test, expected)
+classifier.knn(data_train, data_test, expected, correct_class)
+classifier.svm(data_train, data_test, expected, correct_class)
+classifier.mlp(data_train, data_test, expected, correct_class)
+classifier.tree(data_train, data_test, expected, correct_class)
