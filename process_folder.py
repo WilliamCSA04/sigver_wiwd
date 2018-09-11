@@ -20,9 +20,7 @@ import scipy.io
 import classifier
 import random
 
-def filter_dataset_folders(string):
-    string = string + "/"
-    return string != signatures_folder
+
 
 def filter_genuine(string):
     return ("f" not in string) and (".mat" not in string) and (".db" not in string)
@@ -39,6 +37,9 @@ signatures_path = dataset_path + signatures_folder
 save_path = sys.argv[2]
 model_path = sys.argv[3]
 
+def filter_dataset_folders(string, to_compare = signatures_folder):
+    string = string + "/"
+    return string != signatures_folder
 
 if len(sys.argv) == 5:
     canvas_size = (952, 1360)  # Maximum signature size
