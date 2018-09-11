@@ -3,9 +3,9 @@ from sklearn import tree as treeClassifier
 from sklearn import svm as svmClassifier
 from sklearn.neural_network import MLPClassifier
 
-def knn(data_train, data_test, expected, k = 1, weigths=['uniform', 'distance']):
+def knn(data_train, data_test, expected, k = 1, weights=['uniform', 'distance']):
     print("KNN Classifier")
-    for weight in weigths:
+    for weight in weights:
         # we create an instance of Neighbours Classifier and fit the data.
         clf = neighbors.KNeighborsClassifier(k, weights=weight)
         clf.fit(data_train, expected)
