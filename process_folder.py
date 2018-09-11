@@ -39,7 +39,7 @@ model_path = sys.argv[3]
 
 def filter_dataset_folders(string, to_compare = signatures_folder):
     string = string + "/"
-    return string != signatures_folder
+    return string != to_compare
 
 if len(sys.argv) == 5:
     canvas_size = (952, 1360)  # Maximum signature size
@@ -185,6 +185,9 @@ if(not is_mcyt):
 
 
 data_test = np.array(data)
+
+print("Correctly data test classes: ")
+print(correct_class)
 
 classifier.knn(data_train, data_test, expected)
 classifier.svm(data_train, data_test, expected)
