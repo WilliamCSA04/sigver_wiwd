@@ -137,74 +137,76 @@ for p in files_random:
 
 data_train = np.array(data)
 
+epoch = 100
 
-data = list()
-
-count_g = 0
-count_s = 0
-limit_g = 5 if is_mcyt else 10
-limit_s = 15 if is_mcyt else 10
-print("Generate Test Set")
-correct_class = list()
-for f in paths:
-    # Load and pre-process the signature
-    filename = os.path.join(signatures_path, f)
-    if(count_g == limit_g and count_s == limit_s):
-        break
-    elif("f" not in f and count_g == limit_g):
-        continue
-    elif("f" in f and count_s == limit_s):
-        continue   
-    original = imread(filename, flatten=1)
-    processed = preprocess_signature(original, canvas_size)
-
-    # Use the CNN to extract features
-    feature_vector = model.get_feature_vector(processed)
-    data.append(feature_vector[0])
-    if("f" not in f):
-        count_g += 1
-        correct_class.append(0)
-    else:
-        count_s += 1
-        correct_class.append(1)
-
-if(not is_mcyt):
-    dataset_folders = os.listdir(dataset_path)
-    dataset_folders_filtered = filter(filter_dataset_folders, dataset_folders)
-    dataset_folders_sample = random.sample(dataset_folders_filtered, 10)
-    print("Adding Random to test set (Only for GPDS's dataset)")
-    for p in dataset_folders_sample:
-        f = os.listdir(dataset_path + p)
+for i in range(epoch):
+    data = list()
+    print(i)
+    count_g = 0
+    count_s = 0
+    limit_g = 5 if is_mcyt else 10
+    limit_s = 15 if is_mcyt else 10
+    print("Generate Test Set")
+    correct_class = list()
+    for f in paths:
         # Load and pre-process the signature
-        f_filtered = filter(filter_genuine, f)
-        f_sample = random.sample(f_filtered, 1)[0]
-        filename = os.path.join(dataset_path + p, f_sample)
+        filename = os.path.join(signatures_path, f)
+        if(count_g == limit_g and count_s == limit_s):
+            break
+        elif("f" not in f and count_g == limit_g):
+            continue
+        elif("f" in f and count_s == limit_s):
+            continue   
         original = imread(filename, flatten=1)
         processed = preprocess_signature(original, canvas_size)
 
         # Use the CNN to extract features
         feature_vector = model.get_feature_vector(processed)
         data.append(feature_vector[0])
-        correct_class.append(1)
+        if("f" not in f):
+            count_g += 1
+            correct_class.append(0)
+        else:
+            count_s += 1
+            correct_class.append(1)
+
+    if(not is_mcyt):
+        dataset_folders = os.listdir(dataset_path)
+        dataset_folders_filtered = filter(filter_dataset_folders, dataset_folders)
+        dataset_folders_sample = random.sample(dataset_folders_filtered, 10)
+        print("Adding Random to test set (Only for GPDS's dataset)")
+        for p in dataset_folders_sample:
+            f = os.listdir(dataset_path + p)
+            # Load and pre-process the signature
+            f_filtered = filter(filter_genuine, f)
+            f_sample = random.sample(f_filtered, 1)[0]
+            filename = os.path.join(dataset_path + p, f_sample)
+            original = imread(filename, flatten=1)
+            processed = preprocess_signature(original, canvas_size)
+
+            # Use the CNN to extract features
+            feature_vector = model.get_feature_vector(processed)
+            data.append(feature_vector[0])
+            correct_class.append(1)
 
 
-data_test = np.array(data)
+    data_test = np.array(data)
 
-print("Size of train set: " + str(len(data_train)))
-print("Size of test set: " + str(len(data_test)))
+    print("Size of train set: " + str(len(data_train)))
+    print("Size of test set: " + str(len(data_test)))
 
-print("KNN Classifier") 
-for weights in ['uniform', 'distance']:
-    # we create an instance of Neighbours Classifier and fit the data.
-    clf = neighbors.KNeighborsClassifier(k, weights=weights)
-    clf.fit(data_train, expected)
-    prediction = clf.predict(data_test)
-    print("Prediction: " + weights)   
-    print(confusion_matrix(correct_class, prediction))
-    tn, fp, fn, tp = confusion_matrix(correct_class, prediction).ravel()
-    print("true positive: " + str(tp))
-    print("true negative: " + str(tn))
-    print("false positive: " + str(fp))
-    print("false negative: " + str(fn))
+    print("KNN Classifier") 
+    for weights in ['uniform', 'distance']:
+        # we create an instance of Neighbours Classifier and fit the data.
+        clf = neighbors.KNeighborsClassifier(k, weights=weights)
+        clf.fit(data_train, expected)
+        prediction = clf.predict(data_test)
+        print("Prediction: " + weights)   
+        print(confusion_matrix(correct_class, prediction))
+        tn, fp, fn, tp = confusion_matrix(correct_class, prediction).ravel()
+        print("true positive: " + str(tp))
+        print("true negative: " + str(tn))
+        print("false positive: " + str(fp))
+        print("false negative: " + str(fn))
 
 
