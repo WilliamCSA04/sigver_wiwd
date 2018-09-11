@@ -1,6 +1,6 @@
 from sklearn import neighbors
-from sklearn import tree
-from sklearn import svm
+from sklearn import tree as treeClassifier
+from sklearn import svm as svmClassifier
 from sklearn.neural_network import MLPClassifier
 
 def knn(data_train, data_test, expected, k = 1, weigths=['uniform', 'distance']):
@@ -14,14 +14,14 @@ def knn(data_train, data_test, expected, k = 1, weigths=['uniform', 'distance'])
         print(prediction) 
 
 def tree(data_train, data_test, expected):
-    clf = tree.DecisionTreeClassifier()
+    clf = treeClassifier.DecisionTreeClassifier()
     clf = clf.fit(data_train, expected)
     prediction = clf.predict(data_test)
     print("Prediction Tree: ") 
     print(prediction)
 
 def svm(data_train, data_test, expected):
-    clf = svm.SVC()
+    clf = svmClassifier.SVC()
     clf.fit(data_train, expected)
     prediction = clf.predict(data_test)
     print("Prediction SVM: ") 
