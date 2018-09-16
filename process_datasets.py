@@ -8,7 +8,6 @@ import os
 import scipy.io
 import classifier
 import random
-from process_helper import filter_array_of_folders
 from generate_set import split_into_train_test
 
 datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"] #All datasets needed

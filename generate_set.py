@@ -1,10 +1,11 @@
 import random
 import os
-from process_helper import filter_genuine, filter_forgery, filter_by_text
+from process_helper import filter_genuine, filter_forgery, filter_by_text, remove_invalid_files
 
 def split_into_train_test(array, dataset_path, genuine_options, forgery_options, random_options):
     genuine_user = random.choice(array) #Get a random folder of signatures to use it genuine signatures
     signature_images = os.listdir(dataset_path+genuine_user) #Get images from folder
+    signature_images = filter(remove_invalid_files, signature_images)
 
     #Split genuine signature for train and test
     genuine_signature_images = get_images_splited(signature_images, genuine_options[0], genuine_options[1], filter_genuine)
@@ -48,6 +49,7 @@ def get_random_signatures(folders, dataset_path, number_for_train, number_for_te
     random_signatures_for_test = []
     for folder in folders:
         signature_images = os.listdir(dataset_path + folder)
+        signature_images = filter(remove_invalid_files, signature_images)
         signature_images = filter(filter_genuine, signature_images)
         random.shuffle(signature_images)
         random_signatures_for_train = random_signatures_for_train + signature_images[:number_for_train]
