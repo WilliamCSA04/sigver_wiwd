@@ -50,17 +50,22 @@ mcyt_train = np.array(mcyt_train)
 print("Dataset for mcyt_train: " + str(len(mcyt_train)) + " samples")
 
 print("Starting preprocess images for test of MCYT")
-mcyt_genuine_for_test = mcyt_sets[1][0]
-mcyt_forgery_for_test = mcyt_sets[1][1][:mcyt_forgery_options[1]]
-mcyt_random_for_test = mcyt_sets[1][2][:mcyt_random_options[1]]
-mcyt_for_test = mcyt_genuine_for_test + mcyt_forgery_for_test + mcyt_random_for_test
-mcyt_test = []
-for set in mcyt_sets[1]:
+mcyt_genuine_for_test = []
+mcyt_forgery_for_test = []
+mcyt_random_for_test = []
+for index, set in enumerate(mcyt_sets[1]):
     for image in set:
         original = imread(image, flatten=1)
         processed = preprocess_signature(original, canvas_size)
-        mcyt_test.append(model.get_feature_vector(processed)[0])
+        feature_vector = model.get_feature_vector(processed)
+        if(index == 0):
+            mcyt_genuine_for_test.append(feature_vector[0])
+        elif(index == 1):
+            mcyt_forgery_for_test.append(feature_vector[0])
+        else:
+            mcyt_random_for_test.append(feature_vector[0])
 
+mcyt_test = mcyt_genuine_for_test + mcyt_forgery_for_test[:mcyt_forgery_options[1]] + mcyt_random_for_test[:mcyt_random_options[1]]
 mcyt_test = np.array(mcyt_test)
 print("Dataset for mcyt_test: " + str(len(mcyt_test)) + " samples")
 
