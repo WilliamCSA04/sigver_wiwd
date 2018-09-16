@@ -60,15 +60,23 @@ def get_random_signatures(folders, dataset_path, number_for_train, number_for_te
         signature_images = [path + file for file in signature_images]
         random.shuffle(signature_images)
         random_signatures_for_train = random_signatures_for_train + signature_images[:number_for_train]
-        random_signatures_for_test = random_signatures_for_test + signature_images[number_for_train:number_for_test]
+        signature_images_for_test = signature_images[number_for_train:]
+        for i in range(100):
+            random.shuffle(signature_images_for_test)
+            random_signatures_for_test = random_signatures_for_test + signature_images_for_test[:number_for_test]
+    random_signatures_for_test = list(set(random_signatures_for_test))
     return [random_signatures_for_train, random_signatures_for_test]
     
 
 
 def get_images_splited(signature_images, number_for_train, number_for_test, filter_function):
     signature_images = filter(filter_function, signature_images)
-    number_for_test = number_for_train + number_for_test
     random.shuffle(signature_images)
     signature_images_for_train = signature_images[:number_for_train]
-    signature_images_for_test = signature_images[number_for_train:number_for_test]
+    signature_images_only_test = signature_images[number_for_train:]
+    signature_images_for_test = []
+    for i in range(100):
+        random.shuffle(signature_images_only_test)
+        signature_images_for_test = signature_images + signature_images_only_test[0:number_for_test]
+    signature_images_for_test = list(set(signature_images_for_test))
     return [signature_images_for_train, signature_images_for_test]
