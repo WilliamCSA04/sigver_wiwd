@@ -12,8 +12,6 @@ def split_into_train_test(array, dataset_path, genuine_options, forgery_options,
     genuine_signature_images = get_images_splited(signature_images, genuine_options[0], genuine_options[1], filter_genuine)
     genuine_signature_images_for_train = genuine_signature_images[0]
     genuine_signature_images_for_test = genuine_signature_images[1]
-    print("genuine_signature_images_for_test")
-    print(genuine_signature_images_for_test)
     
     #Split forgery signature for train and test
     forgery_signature_images = get_images_splited(signature_images, forgery_options[0], forgery_options[1], filter_forgery)
