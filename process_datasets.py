@@ -20,9 +20,13 @@ print("Loading MCYT-75")
 mcyt_path = datasets_paths[0]
 mcyt_folders = os.listdir(datasets_paths[0])
 mcyt_folders = [folder + "/" for folder in mcyt_folders]
-mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, [10, 5], [0, 15], [10, 0])
+mcyt_genuine_options=[10, 5]
+mcyt_forgery_options=[0, 15]
+mcyt_random_options=[10, 0]
+mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options, mcyt_forgery_options, mcyt_random_options)
 mcyt_sets = mcyt_sets_classification[0]
 mcyt_classification = mcyt_sets_classification[1]
+
 print("Loading GPDS-160")
 gpds_160_path = datasets_paths[1]
 gpds_160_folders = os.listdir(gpds_160_path)
@@ -46,6 +50,10 @@ mcyt_train = np.array(mcyt_train)
 print("Dataset for mcyt_train: " + str(len(mcyt_train)) + " samples")
 
 print("Starting preprocess images for test of MCYT")
+mcyt_genuine_for_test = mcyt_sets[1][0]
+mcyt_forgery_for_test = mcyt_sets[1][1][:mcyt_forgery_options[1]]
+mcyt_random_for_test = mcyt_sets[1][2][:mcyt_random_options[1]]
+mcyt_for_test = mcyt_genuine_for_test + mcyt_forgery_for_test + mcyt_random_for_test
 mcyt_test = []
 for set in mcyt_sets[1]:
     for image in set:
