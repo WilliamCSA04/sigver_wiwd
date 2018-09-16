@@ -20,24 +20,32 @@ print("Loading MCYT-75")
 mcyt_path = datasets_paths[0]
 mcyt_folders = os.listdir(datasets_paths[0])
 mcyt_folders = [folder + "/" for folder in mcyt_folders]
+#For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
 mcyt_genuine_options=[10, 5]
 mcyt_forgery_options=[0, 15]
 mcyt_random_options=[10, 0]
-mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options, mcyt_forgery_options, mcyt_random_options)
+mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options[0], mcyt_forgery_options[0], mcyt_random_options[0])
 mcyt_sets = mcyt_sets_classification[0]
-mcyt_classification = mcyt_sets_classification[1]
+mcyt_train_classification = mcyt_sets_classification[1]
 
 print("Loading GPDS-160")
 gpds_160_path = datasets_paths[1]
 gpds_160_folders = os.listdir(gpds_160_path)
-gpds_160_folders = [folder + "/" for folder in gpds_160_folders]
-gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, [14, 10], [0, 10], [14, 10])
+gpds_folders = [folder + "/" for folder in gpds_160_folders]
+#For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
+gpds_160_genuine_options = [14, 10]
+gpds_160_forgery_options = [0, 10]
+gpds_160_random_options = [14, 10]
+gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
 print("Loading GPDS-300")
 gpds_300_path = datasets_paths[2]
 gpds_300_folders = os.listdir(gpds_300_path)
 gpds_300_folders = [folder + "/" for folder in gpds_300_folders]
 #For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
-gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, [14, 10], [0, 10], [14, 10])
+gpds_300_genuine_options = [14, 10]
+gpds_300_forgery_options = [0, 10]
+gpds_300_random_options = [14, 10]
+gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_forgery_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
 
 print("Starting preprocess images for train of MCYT")
 mcyt_train = []
@@ -74,5 +82,5 @@ for i in range(len(mcyt_test[len(mcyt_genuine_for_test):])):
 mcyt_test = np.array(mcyt_test)
 print("Dataset for mcyt_test: " + str(len(mcyt_test)) + " samples")
 
-classifier.knn(mcyt_train, mcyt_test, mcyt_classification[0], mcyt_test_classification)
+classifier.knn(mcyt_train, mcyt_test, mcyt_train_classification, mcyt_test_classification)
 
