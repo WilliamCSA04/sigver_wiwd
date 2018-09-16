@@ -19,6 +19,7 @@ model = CNNModel(signet, model_path)
 print("Loading MCYT-75")
 mcyt_path = datasets_paths[0]
 mcyt_folders = os.listdir(datasets_paths[0])
+mcyt_folders = [folder + "/" for folder in mcyt_folders]
 mcyt_sets = split_into_train_test(mcyt_folders, mcyt_path, [10, 5], [0, 15], [10, 0])
 print("Loading GPDS-160")
 gpds_160_path = datasets_paths[1]
