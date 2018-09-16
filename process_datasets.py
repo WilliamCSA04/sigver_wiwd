@@ -9,6 +9,7 @@ import scipy.io
 import classifier
 import random
 from process_helper import filter_array_of_folders
+from generate_set import split_into_train_test
 
 datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"] #All datasets needed
 model_path = "models/signet.pkl" #Always will use this model
@@ -17,11 +18,12 @@ canvas_size = (952, 1360)  # Maximum signature size
 model = CNNModel(signet, model_path)
 
 print("Loading MCYT-75")
+mcyt_path = datasets_paths[0]
 mcyt_folders = os.listdir(datasets_paths[0])
-mcyt_folders = filter_array_of_folders(mcyt_folders, datasets_paths[0]) #Remove files other than signatures
+mcyt_sets = split_into_train_test(mcyt_folders, mcyt_path, [10, 5], [0, 15], [10, 0])
 print("Loading GPDS-160")
 gpds_160_folders = os.listdir(datasets_paths[1])
-gpds_160_folders = filter_array_of_folders(gpds_160_folders, datasets_paths[1]) #Remove files other than signatures
+mcyt_sets = split_into_train_test(mcyt_folders, mcyt_path, [10, 5], [0, 15], [10, 0])
 print("Loading GPDS-300")
 gpds_300_folders = os.listdir(datasets_paths[2])
-gpds_300_folders = filter_array_of_folders(gpds_300_folders, datasets_paths[2]) #Remove files other than signatures
+mcyt_sets = split_into_train_test(mcyt_folders, mcyt_path, [10, 5], [0, 15], [10, 0])
