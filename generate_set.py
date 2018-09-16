@@ -6,8 +6,8 @@ def split_into_train_test(array, dataset_path, genuine_options, forgery_options,
     genuine_user = random.choice(array) #Get a random folder of signatures to use it genuine signatures
     signature_images = os.listdir(dataset_path+genuine_user) #Get images from folder
     signature_images = filter(remove_invalid_files, signature_images)
-    signature_images = [dataset_path + file for file in signature_images]
-    
+    signature_images = [dataset_path + genuine_user + file for file in signature_images]
+
     #Split genuine signature for train and test
     genuine_signature_images = get_images_splited(signature_images, genuine_options[0], genuine_options[1], filter_genuine)
     genuine_signature_images_for_train = genuine_signature_images[0]
