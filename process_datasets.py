@@ -73,14 +73,18 @@ for index, set in enumerate(mcyt_sets[1]):
         else:
             mcyt_random_for_test.append(feature_vector[0])
 
-mcyt_test = mcyt_genuine_for_test + mcyt_forgery_for_test[:mcyt_forgery_options[1]] + mcyt_random_for_test[:mcyt_random_options[1]]
-mcyt_test_classification = []
-for i in range(len(mcyt_genuine_for_test)):
-    mcyt_test_classification.append(1)
-for i in range(len(mcyt_test[len(mcyt_genuine_for_test):])):
-    mcyt_test_classification.append(0)
-mcyt_test = np.array(mcyt_test)
-print("Dataset for mcyt_test: " + str(len(mcyt_test)) + " samples")
+for i in range(100):
+    print("Interation: " + str(i))
+    random.shuffle(mcyt_forgery_for_test)
+    random.shuffle(mcyt_random_for_test)
+    mcyt_test = mcyt_genuine_for_test + mcyt_forgery_for_test[:mcyt_forgery_options[1]] + mcyt_random_for_test[:mcyt_random_options[1]]
+    mcyt_test_classification = []
+    for i in range(len(mcyt_genuine_for_test)):
+        mcyt_test_classification.append(1)
+    for i in range(len(mcyt_test[len(mcyt_genuine_for_test):])):
+        mcyt_test_classification.append(0)
+    mcyt_test = np.array(mcyt_test)
+    print("Dataset for mcyt_test: " + str(len(mcyt_test)) + " samples")
 
-classifier.knn(mcyt_train, mcyt_test, mcyt_train_classification, mcyt_test_classification)
+    classifier.knn(mcyt_train, mcyt_test, mcyt_train_classification, mcyt_test_classification, k=3)
 
