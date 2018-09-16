@@ -1,12 +1,5 @@
 import os
 
-
-def filter_array_of_folders(folders, path):
-    for folder in folders:
-        files = os.listdir(path + folder)
-        files = filter(remove_invalid_files, files)
-    return folders
-
 def filter_forgery(text):
     return "f" in text
 
