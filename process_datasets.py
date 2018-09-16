@@ -24,9 +24,11 @@ mcyt_sets = split_into_train_test(mcyt_folders, mcyt_path, [10, 5], [0, 15], [10
 print("Loading GPDS-160")
 gpds_160_path = datasets_paths[1]
 gpds_160_folders = os.listdir(gpds_160_path)
+gpds_160_folders = [folder + "/" for folder in gpds_160_folders]
 gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, [14, 10], [0, 10], [14, 10])
 print("Loading GPDS-300")
 gpds_300_path = datasets_paths[2]
 gpds_300_folders = os.listdir(gpds_300_path)
+gpds_300_folders = [folder + "/" for folder in gpds_300_folders]
 #For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
 gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, [14, 10], [0, 10], [14, 10])
