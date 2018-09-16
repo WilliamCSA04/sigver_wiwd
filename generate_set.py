@@ -12,7 +12,9 @@ def split_into_train_test(array, dataset_path, genuine_options, forgery_options,
     genuine_signature_images = get_images_splited(signature_images, genuine_options[0], genuine_options[1], filter_genuine)
     genuine_signature_images_for_train = genuine_signature_images[0]
     genuine_signature_images_for_test = genuine_signature_images[1]
-
+    print("genuine_signature_images_for_test")
+    print(genuine_signature_images_for_test)
+    
     #Split forgery signature for train and test
     forgery_signature_images = get_images_splited(signature_images, forgery_options[0], forgery_options[1], filter_forgery)
     forgery_signature_images_for_train = forgery_signature_images[0]
@@ -26,8 +28,8 @@ def split_into_train_test(array, dataset_path, genuine_options, forgery_options,
 
     #Merge lists to create train and test set
     train_set = genuine_signature_images_for_train + forgery_signature_images_for_train + random_signature_images_for_train
-    test_set = genuine_signature_images_for_test + forgery_signature_images_for_test + random_signature_images_for_train
-    
+    test_set = genuine_signature_images_for_test + forgery_signature_images_for_test + random_signature_images_for_test
+
     #Creating classification list
     number_of_genuines_for_train = len(genuine_signature_images_for_train)
     number_of_forgeries_and_randoms_for_train = len(forgery_signature_images_for_train) + len(random_signature_images_for_train)
@@ -39,8 +41,12 @@ def split_into_train_test(array, dataset_path, genuine_options, forgery_options,
     return [[train_set, test_set], [train_classification_list, test_classification_list]]
 
 def generate_classes_list(number_of_genuine, number_of_forgery_and_random):
-    genuine = list(range(number_of_genuine, number_of_genuine+1))
-    forgery = list(range(number_of_forgery_and_random, number_of_forgery_and_random+1))
+    genuine = list()
+    for i in range(0, number_of_genuine):
+        genuine.append(1)
+    forgery = list()
+    for i in range(0, number_of_forgery_and_random):
+        genuine.append(0)
     return genuine + forgery
 
 def get_random_signatures(folders, dataset_path, number_for_train, number_for_test):
@@ -63,6 +69,7 @@ def get_random_signatures(folders, dataset_path, number_for_train, number_for_te
 
 def get_images_splited(signature_images, number_for_train, number_for_test, filter_function):
     signature_images = filter(filter_function, signature_images)
+    number_for_test = number_for_train + number_for_test
     random.shuffle(signature_images)
     signature_images_for_train = signature_images[:number_for_train]
     signature_images_for_test = signature_images[number_for_train:number_for_test]

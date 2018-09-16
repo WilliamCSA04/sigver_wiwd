@@ -20,7 +20,9 @@ print("Loading MCYT-75")
 mcyt_path = datasets_paths[0]
 mcyt_folders = os.listdir(datasets_paths[0])
 mcyt_folders = [folder + "/" for folder in mcyt_folders]
-mcyt_sets = split_into_train_test(mcyt_folders, mcyt_path, [10, 5], [0, 15], [10, 0])
+mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, [10, 5], [0, 15], [10, 0])
+mcyt_sets = mcyt_sets_classification[0]
+mcyt_classification = mcyt_sets_classification[1]
 print("Loading GPDS-160")
 gpds_160_path = datasets_paths[1]
 gpds_160_folders = os.listdir(gpds_160_path)
@@ -32,3 +34,29 @@ gpds_300_folders = os.listdir(gpds_300_path)
 gpds_300_folders = [folder + "/" for folder in gpds_300_folders]
 #For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
 gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, [14, 10], [0, 10], [14, 10])
+
+print(len(mcyt_sets[0]))
+print(len(mcyt_sets[1]))
+print(len(mcyt_classification[0]))
+print(len(mcyt_classification[1]))
+
+print("Starting preprocess images for train of MCYT")
+mcyt_train = []
+for image in mcyt_sets[0]:
+    original = imread(image, flatten=1)
+    processed = preprocess_signature(original, canvas_size)
+    mcyt_train.append(model.get_feature_vector(processed)[0])
+
+mcyt_train = np.array(mcyt_train)
+
+print("Starting preprocess images for test of MCYT")
+mcyt_test = []
+for image in mcyt_sets[1]:
+    original = imread(image, flatten=1)
+    processed = preprocess_signature(original, canvas_size)
+    mcyt_test.append(model.get_feature_vector(processed)[0])
+
+mcyt_test = np.array(mcyt_test)
+
+classifier.knn(mcyt_train, mcyt_test, mcyt_classification[0], mcyt_classification[1])
+
