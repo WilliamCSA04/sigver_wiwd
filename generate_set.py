@@ -9,18 +9,18 @@ def split_into_train_test(array, dataset_path, genuine_options, forgery_options,
     signature_images = [dataset_path + genuine_user + file for file in signature_images]
 
     #Split genuine signature for train and test
-    genuine_signature_images = get_images_splited(signature_images, genuine_options[0], genuine_options[1], filter_genuine, False)
+    genuine_signature_images = get_images_splited(signature_images, genuine_options[0], filter_genuine)
     genuine_signature_images_for_train = genuine_signature_images[0]
     genuine_signature_images_for_test = genuine_signature_images[1]
     
     #Split forgery signature for train and test
-    forgery_signature_images = get_images_splited(signature_images, forgery_options[0], forgery_options[1], filter_forgery)
+    forgery_signature_images = get_images_splited(signature_images, forgery_options[0], filter_forgery)
     forgery_signature_images_for_train = forgery_signature_images[0]
     forgery_signature_images_for_test = forgery_signature_images[1]
 
     #Split random signature for train and test
     array.remove(genuine_user) #Removing genuine_user to avoid get a invalid random signature
-    random_signature_images = get_random_signatures(array, dataset_path, random_options[0], random_options[1])
+    random_signature_images = get_random_signatures(array, dataset_path, random_options[0])
     random_signature_images_for_train = random_signature_images[0]
     random_signature_images_for_test = random_signature_images[1]
 
@@ -47,9 +47,7 @@ def generate_classes_list(number_of_genuine, number_of_forgery_and_random):
         genuine.append(0)
     return genuine + forgery
 
-def get_random_signatures(folders, dataset_path, number_for_train, number_for_test):
-    if(number_for_test == 0 and number_for_train == 0): #To avoid unnecessery loop
-        return [[], []]
+def get_random_signatures(folders, dataset_path, number_for_train):
     random_signatures_for_train = []
     random_signatures_for_test = []
     for folder in folders:
@@ -60,26 +58,14 @@ def get_random_signatures(folders, dataset_path, number_for_train, number_for_te
         signature_images = [path + file for file in signature_images]
         random.shuffle(signature_images)
         random_signatures_for_train = random_signatures_for_train + signature_images[:number_for_train]
-        signature_images_for_test = signature_images[number_for_train:]
-        for i in range(100):
-            random.shuffle(signature_images_for_test)
-            random_signatures_for_test = random_signatures_for_test + signature_images_for_test[:number_for_test]
-    random_signatures_for_test = list(set(random_signatures_for_test))
+        random_signatures_for_test = signature_images[number_for_train:]
     return [random_signatures_for_train, random_signatures_for_test]
     
 
 
-def get_images_splited(signature_images, number_for_train, number_for_test, filter_function, generate_100 = True):
+def get_images_splited(signature_images, number_for_train, filter_function):
     signature_images = filter(filter_function, signature_images)
     random.shuffle(signature_images)
     signature_images_for_train = signature_images[:number_for_train]
-    signature_images_only_test = signature_images[number_for_train:]
-    signature_images_for_test = []
-    if(generate_100):
-        for i in range(100):
-            random.shuffle(signature_images_only_test)
-            signature_images_for_test = signature_images + signature_images_only_test[0:number_for_test]
-        signature_images_for_test = list(set(signature_images_for_test))
-    else:
-        signature_images_for_test = signature_images_only_test[:number_for_test]
+    signature_images_for_test = signature_images[number_for_train:]
     return [signature_images_for_train, signature_images_for_test]

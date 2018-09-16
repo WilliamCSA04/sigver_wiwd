@@ -66,8 +66,13 @@ for index, set in enumerate(mcyt_sets[1]):
             mcyt_random_for_test.append(feature_vector[0])
 
 mcyt_test = mcyt_genuine_for_test + mcyt_forgery_for_test[:mcyt_forgery_options[1]] + mcyt_random_for_test[:mcyt_random_options[1]]
+mcyt_test_classification = []
+for i in range(len(mcyt_genuine_for_test)):
+    mcyt_test_classification.append(1)
+for i in range(len(mcyt_test[len(mcyt_genuine_for_test):])):
+    mcyt_test_classification.append(0)
 mcyt_test = np.array(mcyt_test)
 print("Dataset for mcyt_test: " + str(len(mcyt_test)) + " samples")
 
-classifier.knn(mcyt_train, mcyt_test, mcyt_classification[0], mcyt_classification[1])
+classifier.knn(mcyt_train, mcyt_test, mcyt_classification[0], mcyt_test_classification)
 
