@@ -47,10 +47,11 @@ print("Dataset for mcyt_train: " + str(len(mcyt_train)) + " samples")
 
 print("Starting preprocess images for test of MCYT")
 mcyt_test = []
-for image in mcyt_sets[1]:
-    original = imread(image, flatten=1)
-    processed = preprocess_signature(original, canvas_size)
-    mcyt_test.append(model.get_feature_vector(processed)[0])
+for set in mcyt_sets[1]:
+    for image in set:
+        original = imread(image, flatten=1)
+        processed = preprocess_signature(original, canvas_size)
+        mcyt_test.append(model.get_feature_vector(processed)[0])
 
 mcyt_test = np.array(mcyt_test)
 print("Dataset for mcyt_test: " + str(len(mcyt_test)) + " samples")

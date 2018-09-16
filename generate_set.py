@@ -26,8 +26,8 @@ def split_into_train_test(array, dataset_path, genuine_options, forgery_options,
 
     #Merge lists to create train and test set
     train_set = genuine_signature_images_for_train + forgery_signature_images_for_train + random_signature_images_for_train
-    test_set = genuine_signature_images_for_test + forgery_signature_images_for_test + random_signature_images_for_test
-
+    test_set = [genuine_signature_images_for_test, forgery_signature_images_for_test, random_signature_images_for_test]
+    
     #Creating classification list
     number_of_genuines_for_train = len(genuine_signature_images_for_train)
     number_of_forgeries_and_randoms_for_train = len(forgery_signature_images_for_train) + len(random_signature_images_for_train)
