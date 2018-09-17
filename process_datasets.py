@@ -27,6 +27,7 @@ mcyt_random_options=[10, 0]
 mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options[0], mcyt_forgery_options[0], mcyt_random_options[0])
 mcyt_sets = mcyt_sets_classification[0]
 mcyt_train_set = mcyt_sets[0]
+mcyt_test_set = mcyt_sets[1]
 mcyt_train_classification = mcyt_sets_classification[1]
 
 print("Loading GPDS-160")
@@ -39,6 +40,8 @@ gpds_160_forgery_options = [0, 10]
 gpds_160_random_options = [14, 10]
 gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
 gpds_160_train_set = gpds_160_sets[0][0]
+gpds_160_test_set = gpds_160_sets[0][1]
+gpds_160_train_classification = gpds_160_sets[1]
 
 print("Loading GPDS-300")
 gpds_300_path = datasets_paths[2]
@@ -50,6 +53,9 @@ gpds_300_forgery_options = [0, 10]
 gpds_300_random_options = [14, 10]
 gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_forgery_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
 gpds_300_train_set = gpds_300_sets[0][0]
+gpds_300_test_set = gpds_300_sets[0][1]
+gpds_300_train_classification = gpds_300_sets[1]
+
 
 train_sets = [mcyt_train_set, gpds_160_train_set, gpds_300_train_set]
 train_sets_processed = [[],[],[]]
@@ -65,37 +71,43 @@ for index, set in enumerate(train_sets):
         processed = preprocess_signature(original, canvas_size)
         train_sets_processed[index].append(model.get_feature_vector(processed)[0])
 
-mcyt_train = np.array(train_sets_processed[0])
-print("Dataset for mcyt_train: " + str(len(mcyt_train)) + " samples")
+classifications = [mcyt_train_classification, gpds_160_train_classification, gpds_300_train_classification]
+options = [mcyt_forgery_options[1] + mcyt_random_options[1], gpds_160_forgery_options[1] + gpds_160_random_options[1], gpds_300_forgery_options[1] + gpds_300_random_options[1]]
+test_sets = [mcyt_test_set, gpds_160_test_set, gpds_300_test_set]
+for i, test_set in enumerate(test_sets):
+    if(i == 0):
+        print("Starting preprocess images for test of MCYT")
+    elif(i == 1):
+        print("Starting preprocess images for test of GPDS-160")
+    else:
+        print("Starting preprocess images for test of GPDS-300")
+    genuine_for_test = []
+    forgery_for_test = []
+    random_for_test = []
+    for index, set in enumerate(test_set):
+        for image in set:
+            original = imread(image, flatten=1)
+            processed = preprocess_signature(original, canvas_size)
+            feature_vector = model.get_feature_vector(processed)
+            if(index == 0):
+                genuine_for_test.append(feature_vector[0])
+            elif(index == 1):
+                forgery_for_test.append(feature_vector[0])
+            else:
+                random_for_test.append(feature_vector[0])
 
-print("Starting preprocess images for test of MCYT")
-mcyt_genuine_for_test = []
-mcyt_forgery_for_test = []
-mcyt_random_for_test = []
-for index, set in enumerate(mcyt_sets[1]):
-    for image in set:
-        original = imread(image, flatten=1)
-        processed = preprocess_signature(original, canvas_size)
-        feature_vector = model.get_feature_vector(processed)
-        if(index == 0):
-            mcyt_genuine_for_test.append(feature_vector[0])
-        elif(index == 1):
-            mcyt_forgery_for_test.append(feature_vector[0])
-        else:
-            mcyt_random_for_test.append(feature_vector[0])
 
-for i in range(100):
-    print("Interation: " + str(i))
-    random.shuffle(mcyt_forgery_for_test)
-    random.shuffle(mcyt_random_for_test)
-    mcyt_test = mcyt_genuine_for_test + mcyt_forgery_for_test[:mcyt_forgery_options[1]] + mcyt_random_for_test[:mcyt_random_options[1]]
-    mcyt_test_classification = []
-    for i in range(len(mcyt_genuine_for_test)):
-        mcyt_test_classification.append(1)
-    for i in range(len(mcyt_test[len(mcyt_genuine_for_test):])):
-        mcyt_test_classification.append(0)
-    mcyt_test = np.array(mcyt_test)
-    print("Dataset for mcyt_test: " + str(len(mcyt_test)) + " samples")
-
-    classifier.knn(mcyt_train, mcyt_test, mcyt_train_classification, mcyt_test_classification, k=3)
+    for j in range(100):
+        print("Interation: " + str(j))
+        random.shuffle(forgery_for_test)
+        random.shuffle(random_for_test)
+        #TODO: Check if data are correct
+        option = options[i]
+        test = genuine_for_test + forgery_for_test[:option]
+        test_classification = []
+        for k in range(len(genuine_for_test)):
+            test_classification.append(1)
+        for k in range(option):
+            test_classification.append(0)
+        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, k=3)
 
