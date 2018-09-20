@@ -1,63 +1,85 @@
-from scipy.misc import imread
-from preprocess.normalize import preprocess_signature
 import signet
-from cnn_model import CNNModel
-import numpy as np
 import sys
+import numpy as np
 import os
 import scipy.io
 import classifier
 import random
+from scipy.misc import imread
+from preprocess.normalize import preprocess_signature
+from cnn_model import CNNModel
 from generate_set import split_into_train_test
 
-datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"] #All datasets needed
+datasets_paths = [] 
 model_path = "models/signet.pkl" #Always will use this model
 canvas_size = (952, 1360)  # Maximum signature size
 
+if(len(sys.argv) == 1):
+    datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"]#All datasets needed
+else:
+    datasets_paths = ["datasets/"+ sys.argv[1] +"/"]
+
 model = CNNModel(signet, model_path)
+train_sets = []
+test_sets = []
+classifications = []
+options = []
 
-print("Loading MCYT-75")
-mcyt_path = datasets_paths[0]
-mcyt_folders = os.listdir(datasets_paths[0])
-mcyt_folders = [folder + "/" for folder in mcyt_folders]
-#For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
-mcyt_genuine_options=[10, 5]
-mcyt_forgery_options=[0, 15]
-mcyt_random_options=[10, 0]
-mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options[0], mcyt_forgery_options[0], mcyt_random_options[0])
-mcyt_sets = mcyt_sets_classification[0]
-mcyt_train_set = mcyt_sets[0]
-mcyt_test_set = mcyt_sets[1]
-mcyt_train_classification = mcyt_sets_classification[1]
+if(sys.argv[1] == "MCYT"):
+    print("Loading MCYT-75")
+    mcyt_path = datasets_paths[0]
+    mcyt_folders = os.listdir(datasets_paths[0])
+    mcyt_folders = [folder + "/" for folder in mcyt_folders]
+    #For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
+    mcyt_genuine_options=[10, 5]
+    mcyt_forgery_options=[0, 15]
+    mcyt_random_options=[10, 0]
+    mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options[0], mcyt_forgery_options[0], mcyt_random_options[0])
+    mcyt_sets = mcyt_sets_classification[0]
+    mcyt_train_set = mcyt_sets[0]
+    mcyt_test_set = mcyt_sets[1]
+    mcyt_train_classification = mcyt_sets_classification[1]
+    train_sets.append(mcyt_train_set)
+    test_sets.append(mcyt_test_set)
+    classifications.append(mcyt_train_classification)
+    options.append(mcyt_forgery_options[1] + mcyt_random_options[1])
 
-print("Loading GPDS-160")
-gpds_160_path = datasets_paths[1]
-gpds_160_folders = os.listdir(gpds_160_path)
-gpds_160_folders = [folder + "/" for folder in gpds_160_folders]
-#For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
-gpds_160_genuine_options = [14, 10]
-gpds_160_forgery_options = [0, 10]
-gpds_160_random_options = [14, 10]
-gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
-gpds_160_train_set = gpds_160_sets[0][0]
-gpds_160_test_set = gpds_160_sets[0][1]
-gpds_160_train_classification = gpds_160_sets[1]
+if(sys.argv[1] == "GPDS160"):
+    print("Loading GPDS-160")
+    gpds_160_path = datasets_paths[1]
+    gpds_160_folders = os.listdir(gpds_160_path)
+    gpds_160_folders = [folder + "/" for folder in gpds_160_folders]
+    #For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
+    gpds_160_genuine_options = [14, 10]
+    gpds_160_forgery_options = [0, 10]
+    gpds_160_random_options = [14, 10]
+    gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
+    gpds_160_train_set = gpds_160_sets[0][0]
+    gpds_160_test_set = gpds_160_sets[0][1]
+    gpds_160_train_classification = gpds_160_sets[1]
+    train_sets.append(gpds_160_train_set)
+    test_sets.append(gpds_160_test_set)
+    classifications.append(gpds_160_train_classification)
+    options.append(gpds_160_forgery_options[1] + gpds_160_random_options[1])
 
-print("Loading GPDS-300")
-gpds_300_path = datasets_paths[2]
-gpds_300_folders = os.listdir(gpds_300_path)
-gpds_300_folders = [folder + "/" for folder in gpds_300_folders]
-#For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
-gpds_300_genuine_options = [14, 10]
-gpds_300_forgery_options = [0, 10]
-gpds_300_random_options = [14, 10]
-gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_forgery_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
-gpds_300_train_set = gpds_300_sets[0][0]
-gpds_300_test_set = gpds_300_sets[0][1]
-gpds_300_train_classification = gpds_300_sets[1]
+if(sys.argv[1] == "GPDS300"):
+    print("Loading GPDS-300")
+    gpds_300_path = datasets_paths[2]
+    gpds_300_folders = os.listdir(gpds_300_path)
+    gpds_300_folders = [folder + "/" for folder in gpds_300_folders]
+    #For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
+    gpds_300_genuine_options = [14, 10]
+    gpds_300_forgery_options = [0, 10]
+    gpds_300_random_options = [14, 10]
+    gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_forgery_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
+    gpds_300_train_set = gpds_300_sets[0][0]
+    gpds_300_test_set = gpds_300_sets[0][1]
+    gpds_300_train_classification = gpds_300_sets[1]
+    train_sets.append(gpds_300_train_set)
+    test_sets.append(gpds_300_test_set)
+    classifications.append(gpds_300_train_classification)
+    options.append(gpds_300_forgery_options[1] + gpds_300_random_options[1])
 
-
-train_sets = [mcyt_train_set, gpds_160_train_set, gpds_300_train_set]
 train_sets_processed = [[],[],[]]
 for index, set in enumerate(train_sets):
     if(index == 0):
@@ -71,9 +93,6 @@ for index, set in enumerate(train_sets):
         processed = preprocess_signature(original, canvas_size)
         train_sets_processed[index].append(model.get_feature_vector(processed)[0])
 
-classifications = [mcyt_train_classification, gpds_160_train_classification, gpds_300_train_classification]
-options = [mcyt_forgery_options[1] + mcyt_random_options[1], gpds_160_forgery_options[1] + gpds_160_random_options[1], gpds_300_forgery_options[1] + gpds_300_random_options[1]]
-test_sets = [mcyt_test_set, gpds_160_test_set, gpds_300_test_set]
 for i, test_set in enumerate(test_sets):
     if(i == 0):
         print("Starting preprocess images for test of MCYT")
