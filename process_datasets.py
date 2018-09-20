@@ -13,20 +13,23 @@ from generate_set import split_into_train_test
 datasets_paths = [] 
 model_path = "models/signet.pkl" #Always will use this model
 canvas_size = (952, 1360)  # Maximum signature size
-
+dataset = ""
 if(len(sys.argv) == 1):
     datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"]#All datasets needed
 else:
-    datasets_paths = ["datasets/"+ sys.argv[1] +"/"]
+    dataset = sys.argv[1]
+    datasets_paths = ["datasets/"+ dataset +"/"]
 
 model = CNNModel(signet, model_path)
 train_sets = []
 test_sets = []
 classifications = []
 options = []
+train_message = []
+test_message = []
 
-if(sys.argv[1] == "MCYT"):
-    print("Loading MCYT-75")
+if(dataset == "MCYT"  or dataset == ""):
+    print("Loading MCYT")
     mcyt_path = datasets_paths[0]
     mcyt_folders = os.listdir(datasets_paths[0])
     mcyt_folders = [folder + "/" for folder in mcyt_folders]
@@ -41,10 +44,11 @@ if(sys.argv[1] == "MCYT"):
     mcyt_train_classification = mcyt_sets_classification[1]
     train_sets.append(mcyt_train_set)
     test_sets.append(mcyt_test_set)
+    train_message.append("Starting preprocess images for train of MCYT")
+    test_message.append("Starting preprocess images for test of MCYT")
     classifications.append(mcyt_train_classification)
     options.append(mcyt_forgery_options[1] + mcyt_random_options[1])
-
-if(sys.argv[1] == "GPDS160"):
+if(dataset == "GPDS160" or dataset == ""):
     print("Loading GPDS-160")
     gpds_160_path = datasets_paths[1]
     gpds_160_folders = os.listdir(gpds_160_path)
@@ -56,13 +60,15 @@ if(sys.argv[1] == "GPDS160"):
     gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
     gpds_160_train_set = gpds_160_sets[0][0]
     gpds_160_test_set = gpds_160_sets[0][1]
+    train_message.append("Starting preprocess images for train of GPDS160")
+    test_message.append("Starting preprocess images for test of GPDS160")
     gpds_160_train_classification = gpds_160_sets[1]
     train_sets.append(gpds_160_train_set)
     test_sets.append(gpds_160_test_set)
     classifications.append(gpds_160_train_classification)
     options.append(gpds_160_forgery_options[1] + gpds_160_random_options[1])
 
-if(sys.argv[1] == "GPDS300"):
+if(dataset == "GPDS300" or dataset == ""):
     print("Loading GPDS-300")
     gpds_300_path = datasets_paths[2]
     gpds_300_folders = os.listdir(gpds_300_path)
@@ -74,6 +80,8 @@ if(sys.argv[1] == "GPDS300"):
     gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_forgery_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
     gpds_300_train_set = gpds_300_sets[0][0]
     gpds_300_test_set = gpds_300_sets[0][1]
+    train_message.append("Starting preprocess images for train of GPDS300")
+    test_message.append("Starting preprocess images for test of GPDS300")
     gpds_300_train_classification = gpds_300_sets[1]
     train_sets.append(gpds_300_train_set)
     test_sets.append(gpds_300_test_set)
@@ -82,24 +90,14 @@ if(sys.argv[1] == "GPDS300"):
 
 train_sets_processed = [[],[],[]]
 for index, set in enumerate(train_sets):
-    if(index == 0):
-        print("Starting preprocess images for train of MCYT")
-    elif(index == 1):
-        print("Starting preprocess images for train of GPDS-160")
-    else:
-        print("Starting preprocess images for train of GPDS-300")
+    print(train_message[index])
     for image in set:
         original = imread(image, flatten=1)
         processed = preprocess_signature(original, canvas_size)
         train_sets_processed[index].append(model.get_feature_vector(processed)[0])
 
 for i, test_set in enumerate(test_sets):
-    if(i == 0):
-        print("Starting preprocess images for test of MCYT")
-    elif(i == 1):
-        print("Starting preprocess images for test of GPDS-160")
-    else:
-        print("Starting preprocess images for test of GPDS-300")
+    print(test_message[i])
     genuine_for_test = []
     forgery_for_test = []
     random_for_test = []
@@ -128,5 +126,5 @@ for i, test_set in enumerate(test_sets):
             test_classification.append(1)
         for k in range(option):
             test_classification.append(0)
-        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, k=3)
+        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, k=5)
 
