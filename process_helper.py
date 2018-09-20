@@ -11,3 +11,9 @@ def filter_by_text(text_full, text_part):
 
 def remove_invalid_files(name):
     return ".bmp" in name.lower() or ".jpg" in name.lower()
+
+def validate_train_test(train_set, test_set):
+    for image in test_set:
+        if(image in train_set):
+            print("Image " + image + " found at train set and test set")
+            exit(1)

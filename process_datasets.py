@@ -9,6 +9,7 @@ from scipy.misc import imread
 from preprocess.normalize import preprocess_signature
 from cnn_model import CNNModel
 from generate_set import split_into_train_test
+from process_helper import validate_train_test
 
 datasets_paths = [] 
 model_path = "models/signet.pkl" #Always will use this model
@@ -41,6 +42,7 @@ if(dataset == "MCYT"  or dataset == ""):
     mcyt_sets = mcyt_sets_classification[0]
     mcyt_train_set = mcyt_sets[0]
     mcyt_test_set = mcyt_sets[1]
+    validate_train_test(mcyt_train_set, mcyt_test_set)
     mcyt_train_classification = mcyt_sets_classification[1]
     train_sets.append(mcyt_train_set)
     test_sets.append(mcyt_test_set)
@@ -60,6 +62,7 @@ if(dataset == "GPDS160" or dataset == ""):
     gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
     gpds_160_train_set = gpds_160_sets[0][0]
     gpds_160_test_set = gpds_160_sets[0][1]
+    validate_train_test(gpds_160_train_set, gpds_160_test_set)
     train_message.append("Starting preprocess images for train of GPDS160")
     test_message.append("Starting preprocess images for test of GPDS160")
     gpds_160_train_classification = gpds_160_sets[1]
@@ -80,6 +83,7 @@ if(dataset == "GPDS300" or dataset == ""):
     gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_forgery_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
     gpds_300_train_set = gpds_300_sets[0][0]
     gpds_300_test_set = gpds_300_sets[0][1]
+    validate_train_test(gpds_300_train_set, gpds_300_test_set)
     train_message.append("Starting preprocess images for train of GPDS300")
     test_message.append("Starting preprocess images for test of GPDS300")
     gpds_300_train_classification = gpds_300_sets[1]
