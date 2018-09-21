@@ -50,6 +50,8 @@ if(dataset == "MCYT"  or dataset == ""):
     test_message.append("Starting preprocess images for test of MCYT")
     classifications.append(mcyt_train_classification)
     options.append(mcyt_forgery_options[1] + mcyt_random_options[1])
+    print("This dataset has for test: genuine samples: " + str(len(mcyt_test_set[0])) + " ,Forgery: " + str(len(mcyt_test_set[1])) + " ,Random: " + str(len(mcyt_test_set[2])))
+
 if(dataset == "GPDS160" or dataset == ""):
     print("Loading GPDS-160")
     gpds_160_path = "datasets/GPDS160/"
@@ -70,6 +72,7 @@ if(dataset == "GPDS160" or dataset == ""):
     test_sets.append(gpds_160_test_set)
     classifications.append(gpds_160_train_classification)
     options.append(gpds_160_forgery_options[1] + gpds_160_random_options[1])
+    print("This dataset has for test: genuine samples: " + str(len(gpds_160_test_set[0])) + " ,Forgery: " + str(len(gpds_160_test_set[1])) + " ,Random: " + str(len(gpds_160_test_set[2])))
 
 if(dataset == "GPDS300" or dataset == ""):
     print("Loading GPDS-300")
@@ -83,9 +86,6 @@ if(dataset == "GPDS300" or dataset == ""):
     gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_genuine_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0], gpds_300_genuine_options[1], gpds_300_forgery_options[1], gpds_300_random_options[1])
     gpds_300_train_set = gpds_300_sets[0][0]
     gpds_300_test_set = gpds_300_sets[0][1]
-    print(len(gpds_300_test_set[0]))
-    print(len(gpds_300_test_set[1]))
-    print(len(gpds_300_test_set[2]))
     validate_train_test(gpds_300_train_set, gpds_300_test_set)
     train_message.append("Starting preprocess images for train of GPDS300")
     test_message.append("Starting preprocess images for test of GPDS300")
@@ -94,6 +94,7 @@ if(dataset == "GPDS300" or dataset == ""):
     test_sets.append(gpds_300_test_set)
     classifications.append(gpds_300_train_classification)
     options.append(gpds_300_forgery_options[1] + gpds_300_random_options[1])
+    print("This dataset has for test: genuine samples: " + str(len(gpds_300_test_set[0])) + " ,Forgery: " + str(len(gpds_300_test_set[1])) + " ,Random: " + str(len(gpds_300_test_set[2])))
 
 train_sets_processed = [[],[],[]]
 for index, set in enumerate(train_sets):
