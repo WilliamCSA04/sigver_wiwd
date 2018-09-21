@@ -134,5 +134,5 @@ for i, test_set in enumerate(test_sets):
             test_classification.append(1)
         for k in range(option):
             test_classification.append(0)
-        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, k=7)
+        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification)
 

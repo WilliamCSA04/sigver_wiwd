@@ -4,7 +4,7 @@ from sklearn import svm as svmClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 
-def knn(data_train, data_test, expected, correct_class, k = 1, weights=['uniform', 'distance']):
+def knn(data_train, data_test, expected, correct_class, k = 3, weights=['uniform', 'distance']):
     print("KNN Classifier")
     for weight in weights:
         # we create an instance of Neighbours Classifier and fit the data.
