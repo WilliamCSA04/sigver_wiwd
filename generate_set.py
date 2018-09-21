@@ -32,7 +32,6 @@ def split_into_train_test(array, dataset_path, genuine_train_quantity, forgery_t
     number_of_genuines_for_train = len(genuine_signature_images_for_train)
     number_of_forgeries_and_randoms_for_train = len(forgery_signature_images_for_train) + len(random_signature_images_for_train)
     train_classification_list = generate_classes_list(number_of_genuines_for_train, number_of_forgeries_and_randoms_for_train)
-
     return [[train_set, test_set], train_classification_list]
 
 def generate_classes_list(number_of_genuine, number_of_forgery_and_random):

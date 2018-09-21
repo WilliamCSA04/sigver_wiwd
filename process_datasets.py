@@ -121,14 +121,13 @@ for i, test_set in enumerate(test_sets):
             else:
                 random_for_test.append(feature_vector[0])
 
-
     for j in range(100):
         print("Interation: " + str(j))
         random.shuffle(forgery_for_test)
         random.shuffle(random_for_test)
         #TODO: Check if data are correct
         option = options[i]
-        test = genuine_for_test + forgery_for_test[:option]
+        test = genuine_for_test + forgery_for_test[:option] + random_for_test[:option]
         test_classification = []
         for k in range(len(genuine_for_test)):
             test_classification.append(1)
