@@ -31,14 +31,14 @@ test_message = []
 
 if(dataset == "MCYT"  or dataset == ""):
     print("Loading MCYT")
-    mcyt_path = datasets_paths[0]
+    mcyt_path = "datasets/MCYT/"
     mcyt_folders = os.listdir(datasets_paths[0])
     mcyt_folders = [folder + "/" for folder in mcyt_folders]
     #For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
     mcyt_genuine_options=[10, 5]
     mcyt_forgery_options=[0, 15]
     mcyt_random_options=[10, 0]
-    mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options[0], mcyt_forgery_options[0], mcyt_random_options[0])
+    mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options[0], mcyt_forgery_options[0], mcyt_random_options[0], mcyt_genuine_options[1], mcyt_forgery_options[1], mcyt_random_options[1])
     mcyt_sets = mcyt_sets_classification[0]
     mcyt_train_set = mcyt_sets[0]
     mcyt_test_set = mcyt_sets[1]
@@ -52,14 +52,14 @@ if(dataset == "MCYT"  or dataset == ""):
     options.append(mcyt_forgery_options[1] + mcyt_random_options[1])
 if(dataset == "GPDS160" or dataset == ""):
     print("Loading GPDS-160")
-    gpds_160_path = datasets_paths[1]
+    gpds_160_path = "datasets/GPDS160/"
     gpds_160_folders = os.listdir(gpds_160_path)
     gpds_160_folders = [folder + "/" for folder in gpds_160_folders]
     #For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
     gpds_160_genuine_options = [14, 10]
     gpds_160_forgery_options = [0, 10]
     gpds_160_random_options = [14, 10]
-    gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
+    gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0], gpds_160_genuine_options[1], gpds_160_forgery_options[1], gpds_160_random_options[1])
     gpds_160_train_set = gpds_160_sets[0][0]
     gpds_160_test_set = gpds_160_sets[0][1]
     validate_train_test(gpds_160_train_set, gpds_160_test_set)
@@ -73,16 +73,19 @@ if(dataset == "GPDS160" or dataset == ""):
 
 if(dataset == "GPDS300" or dataset == ""):
     print("Loading GPDS-300")
-    gpds_300_path = datasets_paths[2]
+    gpds_300_path = "datasets/GPDS300/"
     gpds_300_folders = os.listdir(gpds_300_path)
     gpds_300_folders = [folder + "/" for folder in gpds_300_folders]
     #For each array in next line is [number_of_samples_for_train, number_of_samples_for_test]
     gpds_300_genuine_options = [14, 10]
     gpds_300_forgery_options = [0, 10]
     gpds_300_random_options = [14, 10]
-    gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_forgery_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
+    gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_genuine_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0], gpds_300_genuine_options[1], gpds_300_forgery_options[1], gpds_300_random_options[1])
     gpds_300_train_set = gpds_300_sets[0][0]
     gpds_300_test_set = gpds_300_sets[0][1]
+    print(len(gpds_300_test_set[0]))
+    print(len(gpds_300_test_set[1]))
+    print(len(gpds_300_test_set[2]))
     validate_train_test(gpds_300_train_set, gpds_300_test_set)
     train_message.append("Starting preprocess images for train of GPDS300")
     test_message.append("Starting preprocess images for test of GPDS300")
@@ -130,5 +133,5 @@ for i, test_set in enumerate(test_sets):
             test_classification.append(1)
         for k in range(option):
             test_classification.append(0)
-        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, k=5)
+        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, k=7)
 
