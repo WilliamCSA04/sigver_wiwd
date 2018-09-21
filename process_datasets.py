@@ -40,7 +40,7 @@ if(dataset == "MCYT"  or dataset == ""):
     mcyt_genuine_options=[10, 5]
     mcyt_forgery_options=[0, 15]
     mcyt_random_options=[10, 0]
-    mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options[0], mcyt_forgery_options[0], mcyt_random_options[0], mcyt_genuine_options[1], mcyt_forgery_options[1], mcyt_random_options[1])
+    mcyt_sets_classification = split_into_train_test(mcyt_folders, mcyt_path, mcyt_genuine_options[0], mcyt_forgery_options[0], mcyt_random_options[0])
     mcyt_sets = mcyt_sets_classification[0]
     mcyt_train_set = mcyt_sets[0]
     mcyt_test_set = mcyt_sets[1]
@@ -51,7 +51,7 @@ if(dataset == "MCYT"  or dataset == ""):
     train_message.append("Starting preprocess images for train of MCYT")
     test_message.append("Starting preprocess images for test of MCYT")
     classifications.append(mcyt_train_classification)
-    options.append(mcyt_forgery_options[1] + mcyt_random_options[1])
+    options.append([mcyt_forgery_options[1], mcyt_random_options[1]])
     canvas.append((600, 850))
     print("This dataset has for test: genuine samples: " + str(len(mcyt_test_set[0])) + " ,Forgery: " + str(len(mcyt_test_set[1])) + " ,Random: " + str(len(mcyt_test_set[2])))
 
@@ -64,7 +64,7 @@ if(dataset == "GPDS160" or dataset == ""):
     gpds_160_genuine_options = [14, 10]
     gpds_160_forgery_options = [0, 10]
     gpds_160_random_options = [14, 10]
-    gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0], gpds_160_genuine_options[1], gpds_160_forgery_options[1], gpds_160_random_options[1])
+    gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
     gpds_160_train_set = gpds_160_sets[0][0]
     gpds_160_test_set = gpds_160_sets[0][1]
     validate_train_test(gpds_160_train_set, gpds_160_test_set)
@@ -74,7 +74,7 @@ if(dataset == "GPDS160" or dataset == ""):
     train_sets.append(gpds_160_train_set)
     test_sets.append(gpds_160_test_set)
     classifications.append(gpds_160_train_classification)
-    options.append(gpds_160_forgery_options[1] + gpds_160_random_options[1])
+    options.append([gpds_160_forgery_options[1], gpds_160_random_options[1]])
     canvas.append((1768, 2176))
     print("This dataset has for test: genuine samples: " + str(len(gpds_160_test_set[0])) + " ,Forgery: " + str(len(gpds_160_test_set[1])) + " ,Random: " + str(len(gpds_160_test_set[2])))
 
@@ -87,7 +87,7 @@ if(dataset == "GPDS300" or dataset == ""):
     gpds_300_genuine_options = [14, 10]
     gpds_300_forgery_options = [0, 10]
     gpds_300_random_options = [14, 10]
-    gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_genuine_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0], gpds_300_genuine_options[1], gpds_300_forgery_options[1], gpds_300_random_options[1])
+    gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_path, gpds_300_genuine_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
     gpds_300_train_set = gpds_300_sets[0][0]
     gpds_300_test_set = gpds_300_sets[0][1]
     validate_train_test(gpds_300_train_set, gpds_300_test_set)
@@ -97,7 +97,7 @@ if(dataset == "GPDS300" or dataset == ""):
     train_sets.append(gpds_300_train_set)
     test_sets.append(gpds_300_test_set)
     classifications.append(gpds_300_train_classification)
-    options.append(gpds_300_forgery_options[1] + gpds_300_random_options[1])
+    options.append([gpds_300_forgery_options[1], gpds_300_random_options[1]])
     canvas.append((1768, 2176))
     print("This dataset has for test: genuine samples: " + str(len(gpds_300_test_set[0])) + " ,Forgery: " + str(len(gpds_300_test_set[1])) + " ,Random: " + str(len(gpds_300_test_set[2])))
 
@@ -132,11 +132,11 @@ for i, test_set in enumerate(test_sets):
         random.shuffle(random_for_test)
         #TODO: Check if data are correct
         option = options[i]
-        test = genuine_for_test + forgery_for_test[:option] + random_for_test[:option]
+        test = genuine_for_test + forgery_for_test[:option[0]] + random_for_test[:option[1]]
         test_classification = []
         for k in range(len(genuine_for_test)):
             test_classification.append(1)
-        for k in range(option):
+        for k in range(option[0] + option[1]):
             test_classification.append(0)
         classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification)
 
