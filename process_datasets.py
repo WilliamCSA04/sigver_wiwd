@@ -118,13 +118,14 @@ for i, test_set in enumerate(test_sets):
         for image in set:
             original = imread(image, flatten=1)
             processed = preprocess_signature(original, canvas[i])
-            feature_vector = model.get_feature_vector(processed)
             if(index == 0):
+                feature_vector = model.get_feature_vector(processed)
                 genuine_for_test.append(feature_vector[0])
             elif(index == 1):
+                feature_vector = model.get_feature_vector(processed)
                 forgery_for_test.append(feature_vector[0])
             else:
-                random_for_test.append(feature_vector[0])
+                random_for_test.append(processed)
 
     for j in range(100):
         print("Interation: " + str(j))
@@ -132,7 +133,8 @@ for i, test_set in enumerate(test_sets):
         random.shuffle(random_for_test)
         #TODO: Check if data are correct
         option = options[i]
-        test = genuine_for_test + forgery_for_test[:option[0]] + random_for_test[:option[1]]
+        random_signatures_for_test = [model.get_feature_vector(processed)[0] for processed in random_for_test[:option[1]]]
+        test = genuine_for_test + forgery_for_test[:option[0]] + random_signatures_for_test
         test_classification = []
         for k in range(len(genuine_for_test)):
             test_classification.append(1)
