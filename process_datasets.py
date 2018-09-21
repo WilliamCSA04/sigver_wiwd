@@ -13,7 +13,9 @@ from process_helper import validate_train_test
 
 datasets_paths = [] 
 model_path = "models/signet.pkl" #Always will use this model
-canvas_size = (952, 1360)  # Maximum signature size
+#canvas_size = (952, 1360)  # Maximum signature size
+canvas_size = (1768, 2176)  # Maximum signature size
+canvas = []
 dataset = ""
 if(len(sys.argv) == 1):
     datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"]#All datasets needed
@@ -50,6 +52,7 @@ if(dataset == "MCYT"  or dataset == ""):
     test_message.append("Starting preprocess images for test of MCYT")
     classifications.append(mcyt_train_classification)
     options.append(mcyt_forgery_options[1] + mcyt_random_options[1])
+    canvas.append((600, 850))
     print("This dataset has for test: genuine samples: " + str(len(mcyt_test_set[0])) + " ,Forgery: " + str(len(mcyt_test_set[1])) + " ,Random: " + str(len(mcyt_test_set[2])))
 
 if(dataset == "GPDS160" or dataset == ""):
@@ -72,6 +75,7 @@ if(dataset == "GPDS160" or dataset == ""):
     test_sets.append(gpds_160_test_set)
     classifications.append(gpds_160_train_classification)
     options.append(gpds_160_forgery_options[1] + gpds_160_random_options[1])
+    canvas.append((1768, 2176))
     print("This dataset has for test: genuine samples: " + str(len(gpds_160_test_set[0])) + " ,Forgery: " + str(len(gpds_160_test_set[1])) + " ,Random: " + str(len(gpds_160_test_set[2])))
 
 if(dataset == "GPDS300" or dataset == ""):
@@ -94,6 +98,7 @@ if(dataset == "GPDS300" or dataset == ""):
     test_sets.append(gpds_300_test_set)
     classifications.append(gpds_300_train_classification)
     options.append(gpds_300_forgery_options[1] + gpds_300_random_options[1])
+    canvas.append((1768, 2176))
     print("This dataset has for test: genuine samples: " + str(len(gpds_300_test_set[0])) + " ,Forgery: " + str(len(gpds_300_test_set[1])) + " ,Random: " + str(len(gpds_300_test_set[2])))
 
 train_sets_processed = [[],[],[]]
@@ -101,7 +106,7 @@ for index, set in enumerate(train_sets):
     print(train_message[index])
     for image in set:
         original = imread(image, flatten=1)
-        processed = preprocess_signature(original, canvas_size)
+        processed = preprocess_signature(original, canvas[index])
         train_sets_processed[index].append(model.get_feature_vector(processed)[0])
 
 for i, test_set in enumerate(test_sets):
@@ -112,7 +117,7 @@ for i, test_set in enumerate(test_sets):
     for index, set in enumerate(test_set):
         for image in set:
             original = imread(image, flatten=1)
-            processed = preprocess_signature(original, canvas_size)
+            processed = preprocess_signature(original, canvas[i])
             feature_vector = model.get_feature_vector(processed)
             if(index == 0):
                 genuine_for_test.append(feature_vector[0])
