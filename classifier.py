@@ -8,7 +8,7 @@ def knn(data_train, data_test, expected, correct_class, k = 3, weights=['uniform
     print("KNN Classifier")
     accs = []
     
-    for index, weight in enumerate(weights):
+    for weight in weights:
         # we create an instance of Neighbours Classifier and fit the data.
         clf = neighbors.KNeighborsClassifier(k, weights=weight)
         clf.fit(data_train, expected)
