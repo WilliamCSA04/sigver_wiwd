@@ -6,15 +6,20 @@ from sklearn.metrics import accuracy_score
 
 def knn(data_train, data_test, expected, correct_class, k = 3, weights=['uniform', 'distance']):
     print("KNN Classifier")
-    for weight in weights:
+    accs = []
+    
+    for index, weight in enumerate(weights):
         # we create an instance of Neighbours Classifier and fit the data.
         clf = neighbors.KNeighborsClassifier(k, weights=weight)
         clf.fit(data_train, expected)
         prediction = clf.predict(data_test)
         print("Prediction KNN: " + weight) 
         print(prediction) 
-        print("Acc:") 
-        print(accuracy_score(correct_class, prediction))
+        acc = accuracy_score(correct_class, prediction)
+        print("Acc: " + str(acc))
+        accs.append(acc) 
+    return accs
+
 
 def tree(data_train, data_test, expected, correct_class):
     clf = treeClassifier.DecisionTreeClassifier()

@@ -10,6 +10,7 @@ from preprocess.normalize import preprocess_signature
 from cnn_model import CNNModel
 from generate_set import split_into_train_test
 from process_helper import validate_train_test
+from metrics import average
 
 datasets_paths = [] 
 model_path = "models/signet.pkl" #Always will use this model
@@ -126,7 +127,7 @@ for i, test_set in enumerate(test_sets):
                 forgery_for_test.append(feature_vector[0])
             else:
                 random_for_test.append(processed)
-
+    accs = [[0], [0]]
     for j in range(100):
         print("Interation: " + str(j))
         random.shuffle(forgery_for_test)
@@ -140,5 +141,10 @@ for i, test_set in enumerate(test_sets):
             test_classification.append(1)
         for k in range(option[0] + option[1]):
             test_classification.append(0)
-        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification)
+        accuraces = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification)
+        for position, value in enumerate(accuraces):
+            accs[position] += value
+    print(average(accs[0]))
+    print(average(accs[1]))
+    
 
