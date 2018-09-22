@@ -28,7 +28,9 @@ def tree(data_train, data_test, expected, correct_class):
     print("Prediction Tree: ") 
     print(prediction)
     print("Acc:") 
-    print(accuracy_score(correct_class, prediction))
+    acc = accuracy_score(correct_class, prediction)
+    print(acc)
+    return acc
 
 def svm(data_train, data_test, expected, correct_class):
     clf = svmClassifier.SVC()
@@ -36,8 +38,9 @@ def svm(data_train, data_test, expected, correct_class):
     prediction = clf.predict(data_test)
     print("Prediction SVM: ") 
     print(prediction)
-    print("Acc:") 
-    print(accuracy_score(correct_class, prediction))
+    acc = accuracy_score(correct_class, prediction)
+    print(acc)
+    return acc
 
 def mlp(data_train, data_test, expected, correct_class, solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1):
     clf = MLPClassifier(solver=solver, alpha=alpha, hidden_layer_sizes=hidden_layer_sizes, random_state=random_state)
@@ -45,5 +48,6 @@ def mlp(data_train, data_test, expected, correct_class, solver='lbfgs', alpha=1e
     prediction = clf.predict(data_test)
     print("Prediction MLP: ") 
     print(prediction)
-    print("Acc:") 
-    print(accuracy_score(correct_class, prediction))
+    acc = accuracy_score(correct_class, prediction)
+    print(acc)
+    return acc
