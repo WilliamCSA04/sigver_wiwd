@@ -14,16 +14,19 @@ def knn(data_train, data_test, expected, correct_class, number_of_genuine, numbe
 
 
 def tree(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random):
+    print("Tree Classifier")
     clf = treeClassifier.DecisionTreeClassifier()
     return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="Tree")
     
 
 def svm(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random):
+    print("SVM Classifier")
     clf = svmClassifier.SVC()
     return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="SVM")
     
 
 def mlp(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1):
+    print("MLP Classifier")
     clf = MLPClassifier(solver=solver, alpha=alpha, hidden_layer_sizes=hidden_layer_sizes, random_state=random_state)
     return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="MLP")
     
@@ -31,11 +34,8 @@ def mlp(data_train, data_test, expected, correct_class, number_of_genuine, numbe
 def execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name):
     clf.fit(data_train, expected)
     prediction = clf.predict(data_test)
-    print("Prediction: " + name) 
     print(prediction)
     acc = accuracy_score(correct_class, prediction)
-    print("Acc: " + str(acc))
-     
     tn, fp, fn, tp = confusion_matrix(correct_class, prediction).ravel()
     frr = false_rejection_rate(number_of_genuine, fn)
     only_forgery_prediction = prediction[number_of_genuine:]
@@ -46,10 +46,4 @@ def execute_test(clf, data_train, data_test, expected, correct_class, number_of_
     far_skilled = false_acceptance_rate(number_of_skilled, fp_skilled)
     far_random = false_acceptance_rate(number_of_random, fp_random)
     trh = threshold(far_skilled, frr)
-    print("frr: ")
-    print(frr)
-    print("far_skilled: ")
-    print(far_skilled)
-    print("far_random: ")
-    print(far_random)
     return [frr, far_skilled, far_random, trh]    

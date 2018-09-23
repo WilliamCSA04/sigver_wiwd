@@ -128,11 +128,10 @@ for i, test_set in enumerate(test_sets):
                 forgery_for_test.append(feature_vector[0])
             else:
                 random_for_test.append(original)
-    accs_knn = [[], []]
-    far_metrics = []
-    frr_skilled_metrics = []
-    far_random_metrics = []
-    threshold_metrics = []
+    far_metrics = [[],[],[],[]]
+    frr_skilled_metrics = [[],[],[],[]]
+    far_random_metrics = [[],[],[],[]]
+    threshold_metrics = [[],[],[],[]]
     for j in range(100):
         print("Interation: " + str(j))
         random.shuffle(forgery_for_test)
@@ -148,20 +147,41 @@ for i, test_set in enumerate(test_sets):
         for k in range(option[0] + option[1]):
             test_classification.append(0)
         metrics = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
-        far_metrics.append(metrics[0])
-        frr_skilled_metrics.append(metrics[1])
-        far_random_metrics.append(metrics[2])
-        threshold_metrics.append(metrics[3])
-    print("averages")
-    print(average(far_metrics))
-    print(average(frr_skilled_metrics))
-    print(average(far_random_metrics))
-    print(average(threshold_metrics))
-    print("standard deviations")
-    print(standard_deviation(far_metrics))
-    print(standard_deviation(frr_skilled_metrics))
-    print(standard_deviation(far_random_metrics))
-    print(standard_deviation(threshold_metrics))
+        far_metrics[0].append(metrics[0])
+        frr_skilled_metrics[0].append(metrics[1])
+        far_random_metrics[0].append(metrics[2])
+        threshold_metrics[0].append(metrics[3])
+
+        metrics = classifier.tree(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
+        far_metrics[1].append(metrics[0])
+        frr_skilled_metrics[1].append(metrics[1])
+        far_random_metrics[1].append(metrics[2])
+        threshold_metrics[1].append(metrics[3])
+
+        metrics = classifier.svm(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
+        far_metrics[2].append(metrics[0])
+        frr_skilled_metrics[2].append(metrics[1])
+        far_random_metrics[2].append(metrics[2])
+        threshold_metrics[2].append(metrics[3])
+
+        metrics = classifier.mlp(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
+        far_metrics[3].append(metrics[0])
+        frr_skilled_metrics[3].append(metrics[1])
+        far_random_metrics[3].append(metrics[2])
+        threshold_metrics[3].append(metrics[3])
+
+    for p in range(4):
+        types = ["KNN", "Tree", "SVM", "MLP"]
+        print("averages " + types[p])
+        print(average(far_metrics[p]))
+        print(average(frr_skilled_metrics[p]))
+        print(average(far_random_metrics[p]))
+        print(average(threshold_metrics[p]))
+        print("standard deviations " + types[p])
+        print(standard_deviation(far_metrics[p]))
+        print(standard_deviation(frr_skilled_metrics[p]))
+        print(standard_deviation(far_random_metrics[p]))
+        print(standard_deviation(threshold_metrics[p]))
 
     
 
