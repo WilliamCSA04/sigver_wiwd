@@ -23,3 +23,8 @@ def false_acceptance_rate(forgery_quantity, false_positives):
     if(forgery_quantity == 0):
         return 0.0
     return float(false_positives)/forgery_quantity
+
+def threshold(far, frr):
+    if(frr == 0):
+        return 0.0
+    return far/frr

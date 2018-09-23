@@ -3,7 +3,7 @@ from sklearn import tree as treeClassifier
 from sklearn import svm as svmClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
-from metrics import false_rejection_rate, false_acceptance_rate
+from metrics import false_rejection_rate, false_acceptance_rate, threshold
 
 def knn(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, k = 1, weight='uniform'):
     print("KNN Classifier")
@@ -45,10 +45,11 @@ def execute_test(clf, data_train, data_test, expected, correct_class, number_of_
     fp_random = random_prediction.tolist().count(1)
     far_skilled = false_acceptance_rate(number_of_skilled, fp_skilled)
     far_random = false_acceptance_rate(number_of_random, fp_random)
+    trh = threshold(far_skilled, frr)
     print("frr: ")
     print(frr)
     print("far_skilled: ")
     print(far_skilled)
     print("far_random: ")
     print(far_random)
-    return [frr, far_skilled, far_random]    
+    return [frr, far_skilled, far_random, trh]    

@@ -132,6 +132,7 @@ for i, test_set in enumerate(test_sets):
     far_metrics = []
     frr_skilled_metrics = []
     far_random_metrics = []
+    threshold_metrics = []
     for j in range(100):
         print("Interation: " + str(j))
         random.shuffle(forgery_for_test)
@@ -150,12 +151,17 @@ for i, test_set in enumerate(test_sets):
         far_metrics.append(metrics[0])
         frr_skilled_metrics.append(metrics[1])
         far_random_metrics.append(metrics[2])
+        threshold_metrics.append(metrics[3])
+    print("averages")
     print(average(far_metrics))
     print(average(frr_skilled_metrics))
     print(average(far_random_metrics))
+    print(average(threshold_metrics))
+    print("standard deviations")
     print(standard_deviation(far_metrics))
     print(standard_deviation(frr_skilled_metrics))
     print(standard_deviation(far_random_metrics))
+    print(standard_deviation(threshold_metrics))
 
     
 
