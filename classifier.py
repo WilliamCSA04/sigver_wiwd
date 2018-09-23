@@ -5,30 +5,27 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 from metrics import false_rejection_rate, false_acceptance_rate
 
-def knn(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, k = 3, weights=['uniform', 'distance']):
+def knn(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, k = 1, weight='uniform'):
     print("KNN Classifier")
-
-    
-    for weight in weights:
-        # we create an instance of Neighbours Classifier and fit the data.
-        clf = neighbors.KNeighborsClassifier(k, weights=weight)
-        execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="KNN")
+    clf = neighbors.KNeighborsClassifier(k, weights=weight)
+    name = "KNN by " + weight
+    return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name)
 
 
 
 def tree(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random):
     clf = treeClassifier.DecisionTreeClassifier()
-    execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="Tree")
+    return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="Tree")
     
 
 def svm(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random):
     clf = svmClassifier.SVC()
-    execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="SVM")
+    return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="SVM")
     
 
 def mlp(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1):
     clf = MLPClassifier(solver=solver, alpha=alpha, hidden_layer_sizes=hidden_layer_sizes, random_state=random_state)
-    execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="MLP")
+    return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="MLP")
     
 
 def execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name):
@@ -53,4 +50,5 @@ def execute_test(clf, data_train, data_test, expected, correct_class, number_of_
     print("far_skilled: ")
     print(far_skilled)
     print("far_random: ")
-    print(far_random)    
+    print(far_random)
+    return [frr, far_skilled, far_random]    

@@ -118,23 +118,27 @@ for i, test_set in enumerate(test_sets):
     for index, set in enumerate(test_set):
         for image in set:
             original = imread(image, flatten=1)
-            processed = preprocess_signature(original, canvas[i])
             if(index == 0):
+                processed = preprocess_signature(original, canvas[i])
                 feature_vector = model.get_feature_vector(processed)
                 genuine_for_test.append(feature_vector[0])
             elif(index == 1):
+                processed = preprocess_signature(original, canvas[i])
                 feature_vector = model.get_feature_vector(processed)
                 forgery_for_test.append(feature_vector[0])
             else:
-                random_for_test.append(processed)
+                random_for_test.append(original)
     accs_knn = [[], []]
+    far_metrics = []
+    frr_skilled_metrics = []
+    far_random_metrics = []
     for j in range(100):
         print("Interation: " + str(j))
         random.shuffle(forgery_for_test)
         random.shuffle(random_for_test)
         #TODO: Check if data are correct
         option = options[i]
-        random_signatures_for_test = [model.get_feature_vector(processed)[0] for processed in random_for_test[:option[1]]]
+        random_signatures_for_test = [model.get_feature_vector(preprocess_signature(original, canvas[i]))[0] for original in random_for_test[:option[1]]]
         test = genuine_for_test + forgery_for_test[:option[0]] + random_signatures_for_test
         test_classification = []
         genuine_quantity = len(genuine_for_test)
@@ -142,7 +146,16 @@ for i, test_set in enumerate(test_sets):
             test_classification.append(1)
         for k in range(option[0] + option[1]):
             test_classification.append(0)
-        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
+        metrics = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
+        far_metrics.append(metrics[0])
+        frr_skilled_metrics.append(metrics[1])
+        far_random_metrics.append(metrics[2])
+    print(average(far_metrics))
+    print(average(frr_skilled_metrics))
+    print(average(far_random_metrics))
+    print(standard_deviation(far_metrics))
+    print(standard_deviation(frr_skilled_metrics))
+    print(standard_deviation(far_random_metrics))
 
     
 
