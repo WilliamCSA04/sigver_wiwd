@@ -142,7 +142,7 @@ for i, test_set in enumerate(test_sets):
             test_classification.append(1)
         for k in range(option[0] + option[1]):
             test_classification.append(0)
-        accuraces = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity)
+        accuraces = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
         for position, value in enumerate(accuraces):
             accs_knn[position].append(value)
     avg_knn_1 = average(accs_knn[0])

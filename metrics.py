@@ -17,6 +17,7 @@ def standard_deviation(array_of_number, avg = None):
     return sd
 
 def false_rejection_rate(genuine_quantity, false_negatives):
-    if(false_negatives == 0):
-        return 0.0
-    return genuine_quantity/float(false_negatives)
+    return float(false_negatives)/genuine_quantity
+
+def false_acceptance_rate(forgery_quantity, false_positives):
+    return float(false_positives)/forgery_quantity
