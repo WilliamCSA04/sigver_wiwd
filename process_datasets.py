@@ -10,7 +10,7 @@ from preprocess.normalize import preprocess_signature
 from cnn_model import CNNModel
 from generate_set import split_into_train_test
 from process_helper import validate_train_test
-from metrics import average
+from metrics import average, standard_deviation
 
 datasets_paths = [] 
 model_path = "models/signet.pkl" #Always will use this model
@@ -144,7 +144,13 @@ for i, test_set in enumerate(test_sets):
         accuraces = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification)
         for position, value in enumerate(accuraces):
             accs_knn[position].append(value)
-    print(average(accs_knn[0]))
-    print(average(accs_knn[1]))
+    avg_knn_1 = average(accs_knn[0])
+    avg_knn_2 = average(accs_knn[1])
+    print(avg_knn_1)
+    print(avg_knn_2)
+    sd_knn_1 = standard_deviation(accs_knn[0], avg = avg_knn_1)
+    sd_knn_2 = standard_deviation(accs_knn[1], avg = avg_knn_2)
+    print(sd_knn_1)
+    print(sd_knn_2)
     
 

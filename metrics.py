@@ -12,6 +12,6 @@ def standard_deviation(array_of_number, avg = None):
     if(avg is None):
         avg = average(array_of_number)
     for i in array_of_number:
-        sum += pow(i - avg, 2)
+        sum += (pow(i - avg, 2))
     sd = math.sqrt(sum/float(len(array_of_number)))
     return sd
