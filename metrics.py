@@ -16,7 +16,7 @@ def standard_deviation(array_of_number, avg = None):
     sd = math.sqrt(sum/float(len(array_of_number)))
     return sd
 
-def false_rejection_rate(genuine_quantity, false_positives):
-    if(false_positives == 0):
-        return 0
-    return genuine_quantity/float(false_positives)
+def false_rejection_rate(genuine_quantity, false_negatives):
+    if(false_negatives == 0):
+        return 0.0
+    return genuine_quantity/float(false_negatives)
