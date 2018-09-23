@@ -2,9 +2,10 @@ from sklearn import neighbors
 from sklearn import tree as treeClassifier
 from sklearn import svm as svmClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix
+from metrics import false_rejection_rate
 
-def knn(data_train, data_test, expected, correct_class, k = 3, weights=['uniform', 'distance']):
+def knn(data_train, data_test, expected, correct_class, number_of_genuine, k = 3, weights=['uniform', 'distance']):
     print("KNN Classifier")
     accs = []
     
@@ -14,10 +15,14 @@ def knn(data_train, data_test, expected, correct_class, k = 3, weights=['uniform
         clf.fit(data_train, expected)
         prediction = clf.predict(data_test)
         print("Prediction KNN: " + weight) 
-        print(prediction) 
+        print(prediction)
         acc = accuracy_score(correct_class, prediction)
         print("Acc: " + str(acc))
         accs.append(acc) 
+        tn, fp, fn, tp = confusion_matrix(correct_class, prediction).ravel()
+        frr = false_rejection_rate(number_of_genuine, fn)
+        print("frr: ")
+        print(frr)
     return accs
 
 

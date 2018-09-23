@@ -15,3 +15,8 @@ def standard_deviation(array_of_number, avg = None):
         sum += (pow(i - avg, 2))
     sd = math.sqrt(sum/float(len(array_of_number)))
     return sd
+
+def false_rejection_rate(genuine_quantity, false_positives):
+    if(false_positives == 0):
+        return 0
+    return genuine_quantity/float(false_positives)

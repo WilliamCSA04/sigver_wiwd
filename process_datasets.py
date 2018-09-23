@@ -137,11 +137,12 @@ for i, test_set in enumerate(test_sets):
         random_signatures_for_test = [model.get_feature_vector(processed)[0] for processed in random_for_test[:option[1]]]
         test = genuine_for_test + forgery_for_test[:option[0]] + random_signatures_for_test
         test_classification = []
-        for k in range(len(genuine_for_test)):
+        genuine_quantity = len(genuine_for_test)
+        for k in range(genuine_quantity):
             test_classification.append(1)
         for k in range(option[0] + option[1]):
             test_classification.append(0)
-        accuraces = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification)
+        accuraces = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity)
         for position, value in enumerate(accuraces):
             accs_knn[position].append(value)
     avg_knn_1 = average(accs_knn[0])
