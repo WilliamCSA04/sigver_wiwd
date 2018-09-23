@@ -127,7 +127,7 @@ for i, test_set in enumerate(test_sets):
                 forgery_for_test.append(feature_vector[0])
             else:
                 random_for_test.append(processed)
-    accs = [[0], [0]]
+    accs_knn = [[], []]
     for j in range(100):
         print("Interation: " + str(j))
         random.shuffle(forgery_for_test)
@@ -143,8 +143,8 @@ for i, test_set in enumerate(test_sets):
             test_classification.append(0)
         accuraces = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification)
         for position, value in enumerate(accuraces):
-            accs[position] += value
-    print(average(accs[0]))
-    print(average(accs[1]))
+            accs_knn[position].append(value)
+    print(average(accs_knn[0]))
+    print(average(accs_knn[1]))
     
 
