@@ -20,4 +20,6 @@ def false_rejection_rate(genuine_quantity, false_negatives):
     return float(false_negatives)/genuine_quantity
 
 def false_acceptance_rate(forgery_quantity, false_positives):
+    if(forgery_quantity == 0):
+        return 0.0
     return float(false_positives)/forgery_quantity

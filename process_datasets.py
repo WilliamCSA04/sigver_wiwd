@@ -142,16 +142,7 @@ for i, test_set in enumerate(test_sets):
             test_classification.append(1)
         for k in range(option[0] + option[1]):
             test_classification.append(0)
-        accuraces = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
-        for position, value in enumerate(accuraces):
-            accs_knn[position].append(value)
-    avg_knn_1 = average(accs_knn[0])
-    avg_knn_2 = average(accs_knn[1])
-    print(avg_knn_1)
-    print(avg_knn_2)
-    sd_knn_1 = standard_deviation(accs_knn[0], avg = avg_knn_1)
-    sd_knn_2 = standard_deviation(accs_knn[1], avg = avg_knn_2)
-    print(sd_knn_1)
-    print(sd_knn_2)
+        classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
+
     
 
