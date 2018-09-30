@@ -31,6 +31,7 @@ classifications = []
 options = []
 train_message = []
 test_message = []
+svm_weights = []
 
 if(dataset == "MCYT"  or dataset == ""):
     print("Loading MCYT")
@@ -54,6 +55,8 @@ if(dataset == "MCYT"  or dataset == ""):
     classifications.append(mcyt_train_classification)
     options.append([mcyt_forgery_options[1], mcyt_random_options[1]])
     canvas.append((600, 850))
+    svm_genuine_weight = mcyt_random_options[0]/mcyt_genuine_options[0]
+    svm_weights.append({0: 1, 1: svm_genuine_weight})
     print("This dataset has for test: genuine samples: " + str(len(mcyt_test_set[0])) + " ,Forgery: " + str(len(mcyt_test_set[1])) + " ,Random: " + str(len(mcyt_test_set[2])))
 
 if(dataset == "GPDS160" or dataset == ""):
@@ -77,6 +80,8 @@ if(dataset == "GPDS160" or dataset == ""):
     classifications.append(gpds_160_train_classification)
     options.append([gpds_160_forgery_options[1], gpds_160_random_options[1]])
     canvas.append((1768, 2176))
+    svm_genuine_weight = gpds_160_random_options[0]/gpds_160_genuine_options[0]
+    svm_weights.append({0: 1, 1: svm_genuine_weight})
     print("This dataset has for test: genuine samples: " + str(len(gpds_160_test_set[0])) + " ,Forgery: " + str(len(gpds_160_test_set[1])) + " ,Random: " + str(len(gpds_160_test_set[2])))
 
 if(dataset == "GPDS300" or dataset == ""):
@@ -100,6 +105,8 @@ if(dataset == "GPDS300" or dataset == ""):
     classifications.append(gpds_300_train_classification)
     options.append([gpds_300_forgery_options[1], gpds_300_random_options[1]])
     canvas.append((1768, 2176))
+    svm_genuine_weight = gpds_300_random_options[0]/gpds_300_genuine_options[0]
+    svm_weights.append({0: 1, 1: svm_genuine_weight})
     print("This dataset has for test: genuine samples: " + str(len(gpds_300_test_set[0])) + " ,Forgery: " + str(len(gpds_300_test_set[1])) + " ,Random: " + str(len(gpds_300_test_set[2])))
 
 train_sets_processed = [[],[],[]]
@@ -136,7 +143,6 @@ for i, test_set in enumerate(test_sets):
         print("Interation: " + str(j))
         random.shuffle(forgery_for_test)
         random.shuffle(random_for_test)
-        #TODO: Check if data are correct
         option = options[i]
         random_signatures_for_test = [model.get_feature_vector(preprocess_signature(original, canvas[i]))[0] for original in random_for_test[:option[1]]]
         test = genuine_for_test + forgery_for_test[:option[0]] + random_signatures_for_test
@@ -158,7 +164,7 @@ for i, test_set in enumerate(test_sets):
         far_random_metrics[1].append(metrics[2])
         eer_metrics[1].append(metrics[3])
 
-        metrics = classifier.svm(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
+        metrics = classifier.svm(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1], weights=svm_weights[i])
         far_metrics[2].append(metrics[0])
         frr_skilled_metrics[2].append(metrics[1])
         far_random_metrics[2].append(metrics[2])
