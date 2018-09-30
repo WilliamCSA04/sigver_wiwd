@@ -45,7 +45,7 @@ def execute_test(clf, data_train, data_test, expected, correct_class, number_of_
     fp_random = random_prediction.tolist().count(1)
     far_skilled = false_acceptance_rate(number_of_skilled, fp_skilled)
     far_random = false_acceptance_rate(number_of_random, fp_random)
-    err = None
+    eer = None
     if(far_skilled == frr):
-        err = frr
-    return [frr, far_skilled, far_random, err]    
+        eer = frr
+    return [frr, far_skilled, far_random, eer]    
