@@ -43,7 +43,6 @@ def execute_test(clf, data_train, data_test, expected, correct_class, number_of_
                 prediction.append(0)
             else:
                 prediction.append(1)
-        print(prediction)
         fn = 0
         only_genuine_prediction = prediction[:number_of_genuine]
         for pred in only_genuine_prediction:

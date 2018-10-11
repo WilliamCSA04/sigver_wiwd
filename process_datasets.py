@@ -53,9 +53,14 @@ gpds_300_genuine_candidates = list(gpds_300_folders)
 images_dictionary = {}
 
 def add_feature_vector_from_a_image(image, canvas, sets_processed):
-    original = imread(image, flatten=1)
-    processed = preprocess_signature(original, canvas)
-    return sets_processed.append(model.get_feature_vector(processed)[0])
+    if image in images_dictionary.keys():
+        print("Find: " + image)
+        sets_processed.append(images_dictionary[image])
+    else:
+        original = imread(image, flatten=1)
+        processed = preprocess_signature(original, canvas)
+        images_dictionary[image] = model.get_feature_vector(processed)[0]
+        sets_processed.append(images_dictionary[image])
 
 for number_of_interation in range(number_of_interations):
     print("Number of interation:" + str(number_of_interation))
@@ -86,7 +91,7 @@ for number_of_interation in range(number_of_interations):
         gpds_160_genuine_options = [14, 10]
         gpds_160_forgery_options = [0, 10]
         gpds_160_random_options = [14, 10]
-        gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_genuine_candidates[0], gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
+        gpds_160_sets = split_into_train_test(gpds_160_folders, gpds_160_genuine_candidates.pop(), gpds_160_path, gpds_160_genuine_options[0], gpds_160_forgery_options[0], gpds_160_random_options[0])
         gpds_160_train_set = gpds_160_sets[0][0]
         gpds_160_test_set = gpds_160_sets[0][1]
         validate_train_test(gpds_160_train_set, gpds_160_test_set)
@@ -107,7 +112,7 @@ for number_of_interation in range(number_of_interations):
         gpds_300_genuine_options = [14, 10]
         gpds_300_forgery_options = [0, 10]
         gpds_300_random_options = [14, 10]
-        gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_genuine_candidates[0], gpds_300_path, gpds_300_genuine_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
+        gpds_300_sets = split_into_train_test(gpds_300_folders, gpds_300_genuine_candidates.pop(), gpds_300_path, gpds_300_genuine_options[0], gpds_300_forgery_options[0], gpds_300_random_options[0])
         gpds_300_train_set = gpds_300_sets[0][0]
         gpds_300_test_set = gpds_300_sets[0][1]
         validate_train_test(gpds_300_train_set, gpds_300_test_set)
@@ -147,7 +152,7 @@ for number_of_interation in range(number_of_interations):
         frr_skilled_metrics = [[],[],[],[]]
         far_random_metrics = [[],[],[],[]]
         eer_metrics = [[],[],[],[]]
-        for j in range(100):
+        for j in range(1):
             print("Interation: " + str(j))
             random.shuffle(forgery_for_test)
             random.shuffle(random_for_test)
