@@ -33,22 +33,26 @@ def mlp(data_train, data_test, expected, correct_class, number_of_genuine, numbe
 
 def execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name):
     clf.fit(data_train, expected)
-    prediction = clf.predict(data_test)
     prediction_probability = clf.predict_proba(data_test)
-    print(prediction)
+    prediction = []
     print(prediction_probability)
+    for pred in prediction_probability:
+        if pred[1] < 0.5:
+            prediction.append(0)
+        else:
+            prediction.append(1)
+    print(prediction)
     fn = 0
     only_genuine_prediction = prediction[:number_of_genuine]
     for pred in only_genuine_prediction:
         if pred == 0:
             fn += 1 
-    print(fn)
     frr = false_rejection_rate(number_of_genuine, fn)
     only_forgery_prediction = prediction[number_of_genuine:]
     skilled_prediction = only_forgery_prediction[:number_of_skilled]
     random_prediction = only_forgery_prediction[number_of_skilled:]
-    fp_skilled =  skilled_prediction.tolist().count(1)
-    fp_random = random_prediction.tolist().count(1)
+    fp_skilled =  skilled_prediction.count(1)
+    fp_random = random_prediction.count(1)
     far_skilled = false_acceptance_rate(number_of_skilled, fp_skilled)
     far_random = false_acceptance_rate(number_of_random, fp_random)
     eer = None
