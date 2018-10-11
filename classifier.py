@@ -34,28 +34,31 @@ def mlp(data_train, data_test, expected, correct_class, number_of_genuine, numbe
 def execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name):
     clf.fit(data_train, expected)
     prediction_probability = clf.predict_proba(data_test)
-    prediction = []
     print(prediction_probability)
-    for pred in prediction_probability:
-        if pred[1] < 0.5:
-            prediction.append(0)
-        else:
-            prediction.append(1)
-    print(prediction)
-    fn = 0
-    only_genuine_prediction = prediction[:number_of_genuine]
-    for pred in only_genuine_prediction:
-        if pred == 0:
-            fn += 1 
-    frr = false_rejection_rate(number_of_genuine, fn)
-    only_forgery_prediction = prediction[number_of_genuine:]
-    skilled_prediction = only_forgery_prediction[:number_of_skilled]
-    random_prediction = only_forgery_prediction[number_of_skilled:]
-    fp_skilled =  skilled_prediction.count(1)
-    fp_random = random_prediction.count(1)
-    far_skilled = false_acceptance_rate(number_of_skilled, fp_skilled)
-    far_random = false_acceptance_rate(number_of_random, fp_random)
-    eer = None
-    if(far_skilled == frr):
-        eer = frr
+    frr, far_skilled, far_random, eer = [None,None,None,None]
+    for threshold in prediction_probability:
+        prediction = []
+        for pred in prediction_probability:
+            if pred[1] <= threshold[1]:
+                prediction.append(0)
+            else:
+                prediction.append(1)
+        print(prediction)
+        fn = 0
+        only_genuine_prediction = prediction[:number_of_genuine]
+        for pred in only_genuine_prediction:
+            if pred == 0:
+                fn += 1 
+        frr = false_rejection_rate(number_of_genuine, fn)
+        only_forgery_prediction = prediction[number_of_genuine:]
+        skilled_prediction = only_forgery_prediction[:number_of_skilled]
+        random_prediction = only_forgery_prediction[number_of_skilled:]
+        fp_skilled =  skilled_prediction.count(1)
+        fp_random = random_prediction.count(1)
+        far_skilled = false_acceptance_rate(number_of_skilled, fp_skilled)
+        far_random = false_acceptance_rate(number_of_random, fp_random)
+        if(far_skilled == frr):
+            eer = frr
+            print("threshold: " + str(threshold))
+            break
     return [frr, far_skilled, far_random, eer]    
