@@ -50,6 +50,13 @@ gpds_300_folders = os.listdir(gpds_300_path)
 gpds_300_folders = [folder + "/" for folder in gpds_300_folders]
 gpds_300_genuine_candidates = list(gpds_300_folders)
 
+images_dictionary = {}
+
+def add_feature_vector_from_a_image(image, canvas, sets_processed):
+    original = imread(image, flatten=1)
+    processed = preprocess_signature(original, canvas)
+    return sets_processed.append(model.get_feature_vector(processed)[0])
+
 for number_of_interation in range(number_of_interations):
     print("Number of interation:" + str(number_of_interation))
     if(dataset == "MCYT"  or dataset == ""):
@@ -120,9 +127,7 @@ for number_of_interation in range(number_of_interations):
     for index, set in enumerate(train_sets):
         print(train_message[index])
         for image in set:
-            original = imread(image, flatten=1)
-            processed = preprocess_signature(original, canvas[index])
-            train_sets_processed[index].append(model.get_feature_vector(processed)[0])
+            add_feature_vector_from_a_image(image, canvas[index], train_sets_processed[index])
 
     for i, test_set in enumerate(test_sets):
         print(test_message[i])
@@ -131,17 +136,13 @@ for number_of_interation in range(number_of_interations):
         random_for_test = []
         for index, set in enumerate(test_set):
             for image in set:
-                original = imread(image, flatten=1)
                 if(index == 0):
-                    processed = preprocess_signature(original, canvas[i])
-                    feature_vector = model.get_feature_vector(processed)
-                    genuine_for_test.append(feature_vector[0])
+                    add_feature_vector_from_a_image(image, canvas[i], genuine_for_test)
                 elif(index == 1):
-                    processed = preprocess_signature(original, canvas[i])
-                    feature_vector = model.get_feature_vector(processed)
-                    forgery_for_test.append(feature_vector[0])
+                    add_feature_vector_from_a_image(image, canvas[i], forgery_for_test)
                 else:
-                    random_for_test.append(original)
+                    add_feature_vector_from_a_image(image, canvas[i], random_for_test)
+
         far_metrics = [[],[],[],[]]
         frr_skilled_metrics = [[],[],[],[]]
         far_random_metrics = [[],[],[],[]]
@@ -151,8 +152,7 @@ for number_of_interation in range(number_of_interations):
             random.shuffle(forgery_for_test)
             random.shuffle(random_for_test)
             option = options[i]
-            random_signatures_for_test = [model.get_feature_vector(preprocess_signature(original, canvas[i]))[0] for original in random_for_test[:option[1]]]
-            test = genuine_for_test + forgery_for_test[:option[0]] + random_signatures_for_test
+            test = genuine_for_test + forgery_for_test[:option[0]] + random_for_test[:option[1]]
             test_classification = []
             genuine_quantity = len(genuine_for_test)
             for k in range(genuine_quantity):
