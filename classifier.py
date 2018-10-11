@@ -21,7 +21,7 @@ def tree(data_train, data_test, expected, correct_class, number_of_genuine, numb
 
 def svm(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, weights = None):
     print("SVM Classifier")
-    clf = svmClassifier.SVC(class_weight=weights)
+    clf = svmClassifier.SVC(probability=True, class_weight=weights)
     return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="SVM")
     
 
@@ -34,9 +34,15 @@ def mlp(data_train, data_test, expected, correct_class, number_of_genuine, numbe
 def execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name):
     clf.fit(data_train, expected)
     prediction = clf.predict(data_test)
+    prediction_probability = clf.predict_proba(data_test)
     print(prediction)
-    acc = accuracy_score(correct_class, prediction)
-    tn, fp, fn, tp = confusion_matrix(correct_class, prediction).ravel()
+    print(prediction_probability)
+    fn = 0
+    only_genuine_prediction = prediction[:number_of_genuine]
+    for pred in only_genuine_prediction:
+        if pred == 0:
+            fn += 1 
+    print(fn)
     frr = false_rejection_rate(number_of_genuine, fn)
     only_forgery_prediction = prediction[number_of_genuine:]
     skilled_prediction = only_forgery_prediction[:number_of_skilled]
