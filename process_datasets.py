@@ -16,8 +16,12 @@ datasets_paths = []
 model_path = "models/signet.pkl" #Always will use this model
 #canvas_size = (952, 1360)  # Maximum signature size
 canvas_size = (1768, 2176)  # Maximum signature size
-canvas = []
+
 dataset = ""
+frr_global = 0
+far_skilled_global = 0
+far_random_global = 0
+eer_global = 0
 number_of_interations = 1
 if(len(sys.argv) == 1):
     datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"]#All datasets needed
@@ -27,13 +31,6 @@ else:
     datasets_paths = ["datasets/"+ dataset +"/"]
 
 model = CNNModel(signet, model_path)
-train_sets = []
-test_sets = []
-classifications = []
-options = []
-train_message = []
-test_message = []
-svm_weights = []
 
 mcyt_path = "datasets/MCYT/"
 mcyt_folders = os.listdir(datasets_paths[0])
@@ -54,7 +51,6 @@ images_dictionary = {}
 
 def add_feature_vector_from_a_image(image, canvas, sets_processed):
     if image in images_dictionary.keys():
-        print("Find: " + image)
         sets_processed.append(images_dictionary[image])
     else:
         original = imread(image, flatten=1)
@@ -63,6 +59,14 @@ def add_feature_vector_from_a_image(image, canvas, sets_processed):
         sets_processed.append(images_dictionary[image])
 
 for number_of_interation in range(number_of_interations):
+    train_sets = []
+    test_sets = []
+    classifications = []
+    options = []
+    train_message = []
+    test_message = []
+    svm_weights = []
+    canvas = []
     print("Number of interation:" + str(number_of_interation))
     if(dataset == "MCYT"  or dataset == ""):
         print("Loading MCYT")
@@ -152,8 +156,8 @@ for number_of_interation in range(number_of_interations):
         frr_skilled_metrics = [[],[],[],[]]
         far_random_metrics = [[],[],[],[]]
         eer_metrics = [[],[],[],[]]
-        for j in range(1):
-            print("Interation: " + str(j))
+        print("Starting classification")
+        for j in range(100):
             random.shuffle(forgery_for_test)
             random.shuffle(random_for_test)
             option = options[i]
@@ -187,10 +191,15 @@ for number_of_interation in range(number_of_interations):
             frr_skilled_metrics[3].append(metrics[1])
             far_random_metrics[3].append(metrics[2])
             eer_metrics[3].append(metrics[3])
-
+        print("results")
         for p in range(4):
             types = ["KNN", "Tree", "SVM", "MLP"]
             print("averages " + types[p])
+            if(types[p] == "SVM"):
+                frr_global += average(far_metrics[p])
+                far_skilled_global += average(frr_skilled_metrics[p])
+                far_random_global += average(far_random_metrics[p])
+                eer_global += average(eer_metrics[p])
             print(average(far_metrics[p]))
             print(average(frr_skilled_metrics[p]))
             print(average(far_random_metrics[p]))
@@ -202,4 +211,8 @@ for number_of_interation in range(number_of_interations):
             print(standard_deviation(eer_metrics[p]))
 
         
-
+print("Global: ")
+print(frr_global)
+print(far_skilled_global)
+print(far_random_global)
+print(eer_global)
