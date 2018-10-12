@@ -18,7 +18,7 @@ def tree(data_train, data_test, expected, correct_class, number_of_genuine, numb
     
 
 def svm(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, weights = None):
-    clf = svmClassifier.SVC(probability=True, class_weight=weights)
+    clf = svmClassifier.SVC(probability=True, class_weight=weights, kernel="linear")
     return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="SVM")
     
 
