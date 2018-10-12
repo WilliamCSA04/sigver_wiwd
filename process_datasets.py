@@ -18,10 +18,10 @@ model_path = "models/signet.pkl" #Always will use this model
 canvas_size = (1768, 2176)  # Maximum signature size
 
 dataset = ""
-frr_global = 0
-far_skilled_global = 0
-far_random_global = 0
-eer_global = 0
+frr_metrics_local = 0
+far_skilled_local = 0
+far_random_local = 0
+eer_local = 0
 number_of_interations = 1
 if(len(sys.argv) == 1):
     datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"]#All datasets needed
@@ -196,10 +196,10 @@ for number_of_interation in range(number_of_interations):
             types = ["KNN", "Tree", "SVM", "MLP"]
             print("averages " + types[p])
             if(types[p] == "SVM"):
-                frr_global += average(frr_metrics[p])
-                far_skilled_global += average(far_skilled_metrics[p])
-                far_random_global += average(far_random_metrics[p])
-                eer_global += average(eer_metrics[p])
+                frr_metrics_local += average(frr_metrics[p])
+                far_skilled_local += average(far_skilled_metrics[p])
+                far_random_local += average(far_random_metrics[p])
+                eer_local += average(eer_metrics[p])
             print(average(frr_metrics[p]))
             print(average(far_skilled_metrics[p]))
             print(average(far_random_metrics[p]))
@@ -212,7 +212,7 @@ for number_of_interation in range(number_of_interations):
 
         
 print("Global: ")
-print(frr_global)
-print(far_skilled_global)
-print(far_random_global)
-print(eer_global)
+print(frr_metrics_local) #Average of all frr based on user threshold
+print(far_skilled_local) #Average of all frr based on user threshold
+print(far_random_local) #Average of all frr based on user threshold
+print(eer_local) #Average of all frr based on user threshold
