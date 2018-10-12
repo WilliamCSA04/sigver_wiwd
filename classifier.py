@@ -43,15 +43,30 @@ def execute_test(clf, data_train, data_test, expected, correct_class, number_of_
         for pred in only_genuine_prediction:
             if pred == 0:
                 fn += 1 
-        frr = false_rejection_rate(number_of_genuine, fn)
-        only_forgery_prediction = prediction[number_of_genuine:]
-        skilled_prediction = only_forgery_prediction[:number_of_skilled]
-        random_prediction = only_forgery_prediction[number_of_skilled:]
-        fp_skilled =  skilled_prediction.count(1)
-        fp_random = random_prediction.count(1)
-        far_skilled = false_acceptance_rate(number_of_skilled, fp_skilled)
-        far_random = false_acceptance_rate(number_of_random, fp_random)
+        frr, far_skilled, far_random = __classification_metrics(prediction, number_of_genuine, number_of_skilled, number_of_random)
         if(far_skilled == frr):
             eer = frr
             break
-    return [frr, far_skilled, far_random, eer]    
+    prediction_global = clf.predict(data_test)
+    prediction_global = prediction_global.tolist()
+    frr_global, far_skilled_global, far_random_global = __classification_metrics(prediction_global, number_of_genuine, number_of_skilled, number_of_random)
+    eer_global = None
+    if(far_skilled_global == frr_global):
+            eer = frr
+    return [frr, far_skilled, far_random, eer, frr_global, far_skilled_global, far_random_global, eer_global]
+
+def __classification_metrics(prediction, number_of_genuine, number_of_skilled, number_of_random):
+    fn = 0
+    only_genuine_prediction = prediction[:number_of_genuine]
+    for pred in only_genuine_prediction:
+        if pred == 0:
+            fn += 1 
+    frr = false_rejection_rate(number_of_genuine, fn)
+    only_forgery_prediction = prediction[number_of_genuine:]
+    skilled_prediction = only_forgery_prediction[:number_of_skilled]
+    random_prediction = only_forgery_prediction[number_of_skilled:]
+    fp_skilled =  skilled_prediction.count(1)
+    fp_random = random_prediction.count(1)
+    far_skilled = false_acceptance_rate(number_of_skilled, fp_skilled)
+    far_random = false_acceptance_rate(number_of_random, fp_random)
+    return [frr, far_skilled, far_random]

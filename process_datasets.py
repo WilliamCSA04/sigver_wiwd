@@ -18,14 +18,28 @@ model_path = "models/signet.pkl" #Always will use this model
 canvas_size = (1768, 2176)  # Maximum signature size
 
 dataset = ""
+
 frr_metrics_local = 0
 far_skilled_local = 0
 far_random_local = 0
 eer_local = 0
+
+frr_metrics_global = []
+far_skilled_metrics_global = []
+far_random_metrics_global = []
+eer_metrics_global = []
+
 frr_metrics_local_sd = 0
 far_skilled_local_sd = 0
 far_random_local_sd = 0
 eer_local_sd = 0
+
+frr_metrics_global_sd = []
+far_skilled_metrics_global_sd = []
+far_random_metrics_global_sd = []
+eer_metrics_global_sd = []
+
+
 number_of_interations = 1
 if(len(sys.argv) == 1):
     datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"]#All datasets needed
@@ -190,6 +204,16 @@ for number_of_interation in range(number_of_interations):
             far_random_metrics[2].append(metrics[2])
             eer_metrics[2].append(metrics[3])
 
+            frr_metrics_global.append(metrics[4])
+            far_skilled_metrics_global.append(metrics[5])
+            far_random_metrics_global.append(metrics[6])
+            eer_metrics_global.append(metrics[7])
+
+            frr_metrics_global_sd.append(metrics[4])
+            far_skilled_metrics_global_sd.append(metrics[5])
+            far_random_metrics_global_sd.append(metrics[6])
+            eer_metrics_global_sd.append(metrics[7])
+
            # metrics = classifier.mlp(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
            # frr_metrics[3].append(metrics[0])
            # far_skilled_metrics[3].append(metrics[1])
@@ -234,7 +258,7 @@ for number_of_interation in range(number_of_interations):
 
         
 print("Using user Threshold: ")
-#Average of all user threshold
+#Average of all users
 print(frr_metrics_local) 
 print(far_skilled_local)
 print(far_random_local)
@@ -245,3 +269,16 @@ print(frr_metrics_local_sd)
 print(far_skilled_local_sd)
 print(far_random_local_sd)
 print(eer_local_sd)
+
+print("Using global Threshold: ")
+#Average of all users using global threshold
+print(average(frr_metrics_global)) 
+print(average(far_skilled_metrics_global))
+print(average(far_random_metrics_global))
+print(average(eer_metrics_global))
+
+#Standard derivation based on global threshold
+print(standard_deviation(frr_metrics_global_sd)) 
+print(standard_deviation(far_skilled_metrics_global_sd))
+print(standard_deviation(far_random_metrics_global_sd))
+print(standard_deviation(eer_metrics_global_sd))
