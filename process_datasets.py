@@ -241,7 +241,7 @@ print(far_random_local)
 print(eer_local)
 
 #Standard derivation based on user threshold
-print(frr_metrics_local) 
-print(far_skilled_local)
-print(far_random_local)
-print(eer_local)
+print(frr_metrics_local_sd) 
+print(far_skilled_local_sd)
+print(far_random_local_sd)
+print(eer_local_sd)
