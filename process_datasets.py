@@ -152,8 +152,8 @@ for number_of_interation in range(number_of_interations):
                 else:
                     add_feature_vector_from_a_image(image, canvas[i], random_for_test)
 
-        far_metrics = [[],[],[],[]]
-        frr_skilled_metrics = [[],[],[],[]]
+        frr_metrics = [[],[],[],[]]
+        far_skilled_metrics = [[],[],[],[]]
         far_random_metrics = [[],[],[],[]]
         eer_metrics = [[],[],[],[]]
         print("Starting classification")
@@ -169,26 +169,26 @@ for number_of_interation in range(number_of_interations):
             for k in range(option[0] + option[1]):
                 test_classification.append(0)
           #  metrics = classifier.knn(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
-          #  far_metrics[0].append(metrics[0])
-          #  frr_skilled_metrics[0].append(metrics[1])
+          #  frr_metrics[0].append(metrics[0])
+          #  far_skilled_metrics[0].append(metrics[1])
           #  far_random_metrics[0].append(metrics[2])
           #  eer_metrics[0].append(metrics[3])
 
           #  metrics = classifier.tree(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
-          #  far_metrics[1].append(metrics[0])
-          #  frr_skilled_metrics[1].append(metrics[1])
+          #  frr_metrics[1].append(metrics[0])
+          #  far_skilled_metrics[1].append(metrics[1])
           #  far_random_metrics[1].append(metrics[2])
           #  eer_metrics[1].append(metrics[3])
 
             metrics = classifier.svm(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1], weights=svm_weights[i])
-            far_metrics[2].append(metrics[0])
-            frr_skilled_metrics[2].append(metrics[1])
+            frr_metrics[2].append(metrics[0])
+            far_skilled_metrics[2].append(metrics[1])
             far_random_metrics[2].append(metrics[2])
             eer_metrics[2].append(metrics[3])
 
            # metrics = classifier.mlp(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
-           # far_metrics[3].append(metrics[0])
-           # frr_skilled_metrics[3].append(metrics[1])
+           # frr_metrics[3].append(metrics[0])
+           # far_skilled_metrics[3].append(metrics[1])
            # far_random_metrics[3].append(metrics[2])
            # eer_metrics[3].append(metrics[3])
         print("results")
@@ -196,17 +196,17 @@ for number_of_interation in range(number_of_interations):
             types = ["KNN", "Tree", "SVM", "MLP"]
             print("averages " + types[p])
             if(types[p] == "SVM"):
-                frr_global += average(far_metrics[p])
-                far_skilled_global += average(frr_skilled_metrics[p])
+                frr_global += average(frr_metrics[p])
+                far_skilled_global += average(far_skilled_metrics[p])
                 far_random_global += average(far_random_metrics[p])
                 eer_global += average(eer_metrics[p])
-            print(average(far_metrics[p]))
-            print(average(frr_skilled_metrics[p]))
+            print(average(frr_metrics[p]))
+            print(average(far_skilled_metrics[p]))
             print(average(far_random_metrics[p]))
             print(average(eer_metrics[p]))
             print("standard deviations " + types[p])
-            print(standard_deviation(far_metrics[p]))
-            print(standard_deviation(frr_skilled_metrics[p]))
+            print(standard_deviation(frr_metrics[p]))
+            print(standard_deviation(far_skilled_metrics[p]))
             print(standard_deviation(far_random_metrics[p]))
             print(standard_deviation(eer_metrics[p]))
 
