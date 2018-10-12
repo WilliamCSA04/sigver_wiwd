@@ -22,6 +22,10 @@ frr_metrics_local = 0
 far_skilled_local = 0
 far_random_local = 0
 eer_local = 0
+frr_metrics_local_sd = 0
+far_skilled_local_sd = 0
+far_random_local_sd = 0
+eer_local_sd = 0
 number_of_interations = 1
 if(len(sys.argv) == 1):
     datasets_paths = ["datasets/MCYT/", "datasets/GPDS160/", "datasets/GPDS300/"]#All datasets needed
@@ -194,25 +198,50 @@ for number_of_interation in range(number_of_interations):
         print("results")
         for p in range(4):
             types = ["KNN", "Tree", "SVM", "MLP"]
-            print("averages " + types[p])
             if(types[p] == "SVM"):
-                frr_metrics_local += average(frr_metrics[p])
-                far_skilled_local += average(far_skilled_metrics[p])
-                far_random_local += average(far_random_metrics[p])
-                eer_local += average(eer_metrics[p])
-            print(average(frr_metrics[p]))
-            print(average(far_skilled_metrics[p]))
-            print(average(far_random_metrics[p]))
-            print(average(eer_metrics[p]))
-            print("standard deviations " + types[p])
-            print(standard_deviation(frr_metrics[p]))
-            print(standard_deviation(far_skilled_metrics[p]))
-            print(standard_deviation(far_random_metrics[p]))
-            print(standard_deviation(eer_metrics[p]))
+
+                frr_avg = average(frr_metrics[p])
+                far_skilled_avg = average(far_skilled_metrics[p])
+                far_random_avg = average(far_random_metrics[p])
+                eer_avg = average(eer_metrics[p])
+
+                frr_sd = standard_deviation(frr_metrics[p])
+                far_skilled_sd = standard_deviation(far_skilled_metrics[p])
+                far_random_sd = standard_deviation(far_random_metrics[p])
+                eer_sd = standard_deviation(eer_metrics[p])
+                
+                frr_metrics_local += frr_avg
+                far_skilled_local += far_skilled_avg
+                far_random_local += far_random_avg
+                eer_local += eer_avg
+
+                frr_metrics_local_sd += frr_sd
+                far_skilled_local_sd += far_skilled_sd
+                far_random_local_sd += far_random_sd
+                eer_local_sd += eer_sd
+
+                print("averages " + types[p])
+                print(frr_avg)
+                print(far_skilled_avg)
+                print(far_random_avg)
+                print(eer_avg)
+
+                print("standard deviations " + types[p])
+                print(frr_sd)
+                print(far_skilled_sd)
+                print(far_random_sd)
+                print(eer_sd)
 
         
-print("Global: ")
-print(frr_metrics_local) #Average of all frr based on user threshold
-print(far_skilled_local) #Average of all frr based on user threshold
-print(far_random_local) #Average of all frr based on user threshold
-print(eer_local) #Average of all frr based on user threshold
+print("Using user Threshold: ")
+#Average of all user threshold
+print(frr_metrics_local) 
+print(far_skilled_local)
+print(far_random_local)
+print(eer_local)
+
+#Standard derivation based on user threshold
+print(frr_metrics_local) 
+print(far_skilled_local)
+print(far_random_local)
+print(eer_local)
