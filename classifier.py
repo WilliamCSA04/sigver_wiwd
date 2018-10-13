@@ -2,7 +2,7 @@ from sklearn import neighbors
 from sklearn import tree as treeClassifier
 from sklearn import svm as svmClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, roc_curve, auc
 from metrics import false_rejection_rate, false_acceptance_rate
 
 def knn(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, k = 1, weight='uniform'):
@@ -30,6 +30,9 @@ def mlp(data_train, data_test, expected, correct_class, number_of_genuine, numbe
 def execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name):
     clf.fit(data_train, expected)
     prediction_probability = clf.predict_proba(data_test)
+    scores = prediction_probability[:, 1]
+    fpr, tpr, thresholds = roc_curve(correct_class, scores)
+    auc_metric = auc(fpr, tpr)
     frr, far_skilled, far_random, eer = [None,None,None,None]
     for threshold in prediction_probability:
         prediction = []
@@ -53,7 +56,7 @@ def execute_test(clf, data_train, data_test, expected, correct_class, number_of_
     eer_global = None
     if(far_skilled_global == frr_global):
             eer_global = frr_global
-    return [frr, far_skilled, far_random, eer, frr_global, far_skilled_global, far_random_global, eer_global]
+    return [frr, far_skilled, far_random, eer, frr_global, far_skilled_global, far_random_global, eer_global, auc_metric]
 
 def __classification_metrics(prediction, number_of_genuine, number_of_skilled, number_of_random):
     fn = 0

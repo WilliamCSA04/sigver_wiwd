@@ -39,6 +39,7 @@ far_skilled_metrics_global_sd = []
 far_random_metrics_global_sd = []
 eer_metrics_global_sd = []
 
+auc_metrics = []
 
 number_of_interations = 1
 if(len(sys.argv) == 1):
@@ -214,6 +215,8 @@ for number_of_interation in range(number_of_interations):
             far_random_metrics_global_sd.append(metrics[6])
             eer_metrics_global_sd.append(metrics[7])
 
+            auc_metrics.append(metrics[8])
+
            # metrics = classifier.mlp(np.array(train_sets_processed[i]), test, classifications[i], test_classification, genuine_quantity, option[0], option[1])
            # frr_metrics[3].append(metrics[0])
            # far_skilled_metrics[3].append(metrics[1])
@@ -260,10 +263,10 @@ for number_of_interation in range(number_of_interations):
 print("Using user Threshold: ")
 #Average of all users
 print("Average")
-print("FRR " + average(frr_metrics_local)) 
-print("FAR Skilled " + average(far_skilled_local))
-print("FAR Random " + average(far_random_local))
-print("EER local " + average(eer_local))
+print("FRR " + str(average(frr_metrics_local))) 
+print("FAR Skilled " + str(average(far_skilled_local)))
+print("FAR Random " + str(average(far_random_local)))
+print("EER local " + str(average(eer_local)))
 
 #Standard derivation based on user threshold
 print("Standard deviation")
@@ -275,8 +278,18 @@ print("EER " + str(standard_deviation(eer_local_sd)))
 print("Using global Threshold: ")
 #Average of all users using global threshold
 print("Average")
-print("EER " + average(eer_metrics_global))
+print("FRR " + str(average(frr_metrics_global)))
+print("FAR Skilled " + str(average(far_skilled_metrics_global)))
+print("FAR Random " + str(average(far_random_metrics_global)))
+print("EER " + str(average(eer_metrics_global)))
 
 #Standard derivation based on global threshold
 print("Standard deviation")
-print("ERR " + standard_deviation(eer_metrics_global_sd))
+print("FRR " + str(standard_deviation(frr_metrics_global)))
+print("FAR Skilled " + str(standard_deviation(far_skilled_metrics_global)))
+print("FAR Random " + str(standard_deviation(far_random_metrics_global)))
+print("EER " + str(standard_deviation(eer_metrics_global)))
+
+print("Area under curve")
+print("AUC AVG: " + str(average(auc_metrics)))
+print("AUC SD: " + str(standard_deviation(auc_metrics)))
