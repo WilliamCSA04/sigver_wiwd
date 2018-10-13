@@ -19,20 +19,20 @@ canvas_size = (1768, 2176)  # Maximum signature size
 
 dataset = ""
 
-frr_metrics_local = 0
-far_skilled_local = 0
-far_random_local = 0
-eer_local = 0
+frr_metrics_local = []
+far_skilled_local = []
+far_random_local = []
+eer_local = []
 
 frr_metrics_global = []
 far_skilled_metrics_global = []
 far_random_metrics_global = []
 eer_metrics_global = []
 
-frr_metrics_local_sd = 0
-far_skilled_local_sd = 0
-far_random_local_sd = 0
-eer_local_sd = 0
+frr_metrics_local_sd = []
+far_skilled_local_sd = []
+far_random_local_sd = []
+eer_local_sd = []
 
 frr_metrics_global_sd = []
 far_skilled_metrics_global_sd = []
@@ -234,15 +234,15 @@ for number_of_interation in range(number_of_interations):
                 far_random_sd = standard_deviation(far_random_metrics[p])
                 eer_sd = standard_deviation(eer_metrics[p])
                 
-                frr_metrics_local += frr_avg
-                far_skilled_local += far_skilled_avg
-                far_random_local += far_random_avg
-                eer_local += eer_avg
+                frr_metrics_local += frr_metrics[p]
+                far_skilled_local += far_skilled_metrics[p]
+                far_random_local += far_random_metrics[p]
+                eer_local += eer_metrics[p]
 
-                frr_metrics_local_sd += frr_sd
-                far_skilled_local_sd += far_skilled_sd
-                far_random_local_sd += far_random_sd
-                eer_local_sd += eer_sd
+                frr_metrics_local_sd += frr_metrics[p]
+                far_skilled_local_sd += far_skilled_metrics[p]
+                far_random_local_sd += far_random_metrics[p]
+                eer_local_sd += eer_metrics[p]
 
                 print("averages " + types[p])
                 print(frr_avg)
@@ -259,26 +259,24 @@ for number_of_interation in range(number_of_interations):
         
 print("Using user Threshold: ")
 #Average of all users
-print(frr_metrics_local) 
-print(far_skilled_local)
-print(far_random_local)
-print(eer_local)
+print("Average")
+print("FRR " + average(frr_metrics_local)) 
+print("FAR Skilled " + average(far_skilled_local))
+print("FAR Random " + average(far_random_local))
+print("EER local " + average(eer_local))
 
 #Standard derivation based on user threshold
-print(frr_metrics_local_sd) 
-print(far_skilled_local_sd)
-print(far_random_local_sd)
-print(eer_local_sd)
+print("Standard deviation")
+print("FRR " + str(standard_deviation(frr_metrics_local_sd))) 
+print("FAR Skilled " + str(standard_deviation(far_skilled_local_sd)))
+print("FAR Random " + str(standard_deviation(far_random_local_sd)))
+print("EER " + str(standard_deviation(eer_local_sd)))
 
 print("Using global Threshold: ")
 #Average of all users using global threshold
-print(average(frr_metrics_global)) 
-print(average(far_skilled_metrics_global))
-print(average(far_random_metrics_global))
-print(average(eer_metrics_global))
+print("Average")
+print("EER " + average(eer_metrics_global))
 
 #Standard derivation based on global threshold
-print(standard_deviation(frr_metrics_global_sd)) 
-print(standard_deviation(far_skilled_metrics_global_sd))
-print(standard_deviation(far_random_metrics_global_sd))
-print(standard_deviation(eer_metrics_global_sd))
+print("Standard deviation")
+print("ERR " + standard_deviation(eer_metrics_global_sd))
