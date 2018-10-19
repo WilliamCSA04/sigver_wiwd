@@ -66,6 +66,11 @@ gpds_300_folders = os.listdir(gpds_300_path)
 gpds_300_folders = [folder + "/" for folder in gpds_300_folders]
 gpds_300_genuine_candidates = list(gpds_300_folders)
 
+gpds_50_path = "datasets/GPDS50/"
+gpds_50_folders = os.listdir(gpds_50_path)
+gpds_50_folders = [folder + "/" for folder in gpds_50_folders]
+gpds_50_genuine_candidates = list(gpds_50_folders)
+
 images_dictionary = {}
 
 def add_feature_vector_from_a_image(image, canvas, sets_processed):
@@ -150,6 +155,27 @@ for number_of_interation in range(number_of_interations):
         svm_genuine_weight = (gpds_300_random_options[0]*299)/gpds_300_genuine_options[0]
         svm_weights.append({0: 1, 1: svm_genuine_weight})
         print("This dataset has for test: genuine samples: " + str(len(gpds_300_test_set[0])) + " ,Forgery: " + str(len(gpds_300_test_set[1])) + " ,Random: " + str(len(gpds_300_test_set[2])))
+
+    if(dataset == "GPDS50"):
+        print("Loading GPDS-50")
+        gpds_50_genuine_options = [14, 10]
+        gpds_50_forgery_options = [0, 10]
+        gpds_50_random_options = [14, 10]
+        gpds_50_sets = split_into_train_test(gpds_50_folders, gpds_50_genuine_candidates.pop(), gpds_50_path, gpds_50_genuine_options[0], gpds_50_forgery_options[0], gpds_50_random_options[0])
+        gpds_50_train_set = gpds_50_sets[0][0]
+        gpds_50_test_set = gpds_50_sets[0][1]
+        validate_train_test(gpds_50_train_set, gpds_50_test_set)
+        train_message.append("Starting preprocess images for train of GPDS50")
+        test_message.append("Starting preprocess images for test of GPDS50")
+        gpds_50_train_classification = gpds_50_sets[1]
+        train_sets.append(gpds_50_train_set)
+        test_sets.append(gpds_50_test_set)
+        classifications.append(gpds_50_train_classification)
+        options.append([gpds_50_forgery_options[1], gpds_50_random_options[1]])
+        canvas.append((1768, 2176))
+        svm_genuine_weight = (gpds_50_random_options[0]*299)/gpds_50_genuine_options[0]
+        svm_weights.append({0: 1, 1: svm_genuine_weight})
+        print("This dataset has for test: genuine samples: " + str(len(gpds_50_test_set[0])) + " ,Forgery: " + str(len(gpds_50_test_set[1])) + " ,Random: " + str(len(gpds_50_test_set[2])))
 
     train_sets_processed = [[],[],[]]
     for index, set in enumerate(train_sets):
