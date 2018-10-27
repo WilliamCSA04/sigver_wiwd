@@ -50,12 +50,20 @@ def execute_test(clf, data_train, data_test, expected, correct_class, number_of_
         if(far_skilled == frr):
             eer = frr
             break
+        else:
+            diff = abs(far_skilled - frr)
+            if eer > diff:
+                eer = diff
     prediction_global = clf.predict(data_test)
     prediction_global = prediction_global.tolist()
     frr_global, far_skilled_global, far_random_global = __classification_metrics(prediction_global, number_of_genuine, number_of_skilled, number_of_random)
     eer_global = None
     if(far_skilled_global == frr_global):
             eer_global = frr_global
+    else:
+            diff = abs(far_skilled_global - frr_global)
+            if eer_global > diff:
+                eer_global = diff
     return [frr, far_skilled, far_random, eer, frr_global, far_skilled_global, far_random_global, eer_global, auc_metric]
 
 def __classification_metrics(prediction, number_of_genuine, number_of_skilled, number_of_random):
