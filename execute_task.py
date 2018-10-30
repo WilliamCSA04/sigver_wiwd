@@ -5,6 +5,7 @@ from cnn_model import CNNModel
 from gpds_signatures import *
 from signature_image_features import add_feature_vector_from_a_image
 from classifier import *
+from metrics import *
 
 dataset = sys.argv[1]
 
@@ -125,3 +126,28 @@ for user in train_genuine_users:
     for index, value in enumerate(partial_results):
         results[index] += value
 
+print("Results: ")
+print("===USER AVG===: ")
+print("FRR: " + str(average(results[0])))
+print("FAR_SKILLED: " + str(average(results[1])))
+print("FAR_RANDOM: " + str(average(results[2])))
+print("EER: " + str(average(results[3])))
+print("===USER SD===: ")
+print("FRR: " + str(standard_deviation(results[0])))
+print("FAR_SKILLED: " + str(standard_deviation(results[1])))
+print("FAR_RANDOM: " + str(standard_deviation(results[2])))
+print("EER: " + str(standard_deviation(results[3])))
+
+print("===GLOBAL AVG===: ")
+print("FRR: " + str(average(results[4])))
+print("FAR_SKILLED: " + str(average(results[5])))
+print("FAR_RANDOM: " + str(average(results[6])))
+print("EER: " + str(average(results[7])))
+print("===GLOBAL SD===: ")
+print("FRR: " + str(standard_deviation(results[4])))
+print("FAR_SKILLED: " + str(standard_deviation(results[5])))
+print("FAR_RANDOM: " + str(standard_deviation(results[6])))
+print("EER: " + str(standard_deviation(results[7])))
+print("===AUC===")
+print("AVG: " + str(average(results[8])))
+print("SD: " + str(standard_deviation(results[8])))
