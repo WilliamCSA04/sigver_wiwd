@@ -47,9 +47,9 @@ for user in train_genuine_users:
     train_config = config["train_config"]
     genuine_signatures = get_genuines(path, train_config["genuine"])
     for image in genuine_signatures:
-        add_feature_vector_from_a_image(images_dictionary, image, config["max_image_size"], config["canvas"], train_set["genuine"], model)
-
-print("Train set:")
-print("Train Genuines: " + str(len(train_set["genuine"])))
-print("Train Skilled: " + str(len(train_set["skilled"])))
-print("Train Random: " + str(len(train_set["random"])))
+        image_path = path+"/"+image
+        add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["genuines"], model)
+    print("Train set:")
+    print("Train Genuines: " + str(len(train_set["genuines"])))
+    print("Train Skilled: " + str(len(train_set["skilled"])))
+    print("Train Random: " + str(len(train_set["random"])))
