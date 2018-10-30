@@ -67,13 +67,24 @@ for user in train_genuine_users:
     print("Train Genuines: " + str(len(train_set["genuines"])))
     print("Train Skilled: " + str(len(train_set["skilled"])))
     print("Train Random: " + str(len(train_set["random"])))
+
     max_signature_numbers = config["signature_numbers_by_user"]
     test_config = config["test_config"]
     print("Loading genuine signatures to test")
     genuine_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
+    print("Starting preprocess genuine signatures to test")
     for image in genuine_signatures:
         image_path = path+"/"+image
         add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["genuines"], model)
+    
+    print("Loading skilled signatures to test")
+    skilled_signatures = get_skilled(path, test_config['skilled'])
+    print("Starting preprocess skilled signatures to test")
+    for image in genuine_signatures:
+        image_path = path+"/"+image
+        add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["skilled"], model)
+    
+    
     print("Test set:")
     print("Test Genuines: " + str(len(test_set["genuines"])))
     print("Test Skilled: " + str(len(test_set["skilled"])))
