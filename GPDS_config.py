@@ -1,3 +1,13 @@
+svm_linear = {
+            "model_path": "models/signetf_lambda0.95.pkl",
+            "c-minus": 1,
+            "gamma": "auto"
+        }
+svm_rbf = {
+            "model_path": "models/signetf_lambda0.999.pkl",
+            "c-minus": 1,
+            "gamma": 2**(-11)
+        }
 def gpds160_config():
     config = {
         "dataset_genuine_path": "/datasets/gpds160/",
@@ -15,12 +25,8 @@ def gpds160_config():
         "number_of_interations": 160,
         "max_image_size": (819, 1137),
         "canvas": (952, 1360),
-        "svm_liner": {
-            "model_path": "models/signetf_lambda0.95.pkl"
-        },
-        "svm_rbf": {
-            "model_path": "models/signetf_lambda0.999.pkl"
-        }
+        "svm_linear": svm_linear,
+        "svm_rbf": svm_rbf
     }
     return config
 
@@ -41,11 +47,7 @@ def gpds300_config():
         "number_of_interations": 300,
         "max_image_size": (819, 1137),
         "canvas": (952, 1360),
-        "svm_liner": {
-            "model_path": "models/signetf_lambda0.95.pkl"
-        },
-        "svm_rbf": {
-            "model_path": "models/signetf_lambda0.999.pkl"
-        }
+        "svm_liner": svm_linear,
+        "svm_rbf": svm_rbf
     }
     return config
