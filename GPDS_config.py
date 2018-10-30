@@ -12,7 +12,9 @@ def gpds160_config():
             "skilled": 10,
             "random": 10
         },
-        "number_of_interations": 160
+        "number_of_interations": 160,
+        "max_image_size": (819, 1137),
+        "canvas": (952, 1360)
     }
     return config
 
@@ -30,6 +32,8 @@ def gpds300_config():
             "skilled": 10,
             "random": 10
         },
-        "number_of_interations": 300
+        "number_of_interations": 300,
+        "max_image_size": (819, 1137),
+        "canvas": (952, 1360)
     }
     return config
