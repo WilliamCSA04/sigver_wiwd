@@ -23,8 +23,8 @@ def __get_signatures(path):
 
 def __validate_number_of_signatures(max_limit, number_of_signatures):
     min_limit = 0
-    if(number_of_signatures < 0):
-        print("error: number of signature is higher than 0")
+    if(number_of_signatures < min_limit):
+        print("error: number of signature is higher than " + str(min_limit))
         exit()
     elif(number_of_signatures > max_limit):
         print("error: number of signature is lower than " + str(max_limit))
