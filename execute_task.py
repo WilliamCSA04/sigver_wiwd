@@ -1,10 +1,10 @@
 import sys
 import signet
 import random
+import classifier
 from cnn_model import CNNModel
 from gpds_signatures import *
 from signature_image_features import add_feature_vector_from_a_image
-from classifier import *
 from metrics import *
 
 dataset = sys.argv[1]
@@ -28,7 +28,7 @@ train_set = {
     "random": []
 }
 
-results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+results = [[], [], [], [], [], [], [], [], []]
 
 svm = config["svm_linear"]
 
@@ -42,6 +42,7 @@ train_config = config["train_config"]
 
 print("Starting preprocess random signatures for train")
 for user in random_users:
+
     path = config["dataset_for_random_path"] + user
     random_signatures = get_genuines(path, train_config["random"])
     for image in random_signatures:
@@ -106,8 +107,8 @@ for user in train_genuine_users:
     print("Test Skilled: " + str(len(test_set["skilled"])))
     print("Test Random: " + str(len(test_set["random"])))
 
-    data_train = train_config["genuines"] + train_config["random"]
-    data_test = test_config["genuines"] + test_config["skilled"] + test_config["random"]
+    data_train = train_set["genuines"] + train_set["random"]
+    data_test = test_set["genuines"] + test_set["skilled"] + test_set["random"]
     train_classes = []
     for i in train_set["genuines"]:
         train_classes.append(1)
@@ -122,9 +123,9 @@ for user in train_genuine_users:
         test_classes.append(0)
     c_plus = len(train_set["random"])/len(train_set["genuines"])
     weights = {0: svm["c-minus"], 1: c_plus}
-    partial_results = svm(data_train, data_test, train_classes, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], gamma = svm["gamma"], weights = weights)
+    partial_results = classifier.svm(data_train, data_test, train_classes, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], gamma = svm["gamma"], weights = weights)
     for index, value in enumerate(partial_results):
-        results[index] += value
+        results[index].append(value)
 
 print("Results: ")
 print("===USER AVG===: ")
