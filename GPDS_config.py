@@ -14,7 +14,13 @@ def gpds160_config():
         },
         "number_of_interations": 160,
         "max_image_size": (819, 1137),
-        "canvas": (952, 1360)
+        "canvas": (952, 1360),
+        "svm_liner": {
+            "model_path": "models/signetf_lambda0.95.pkl"
+        },
+        "svm_rbf": {
+            "model_path": "models/signetf_lambda0.999.pkl"
+        }
     }
     return config
 
@@ -34,6 +40,12 @@ def gpds300_config():
         },
         "number_of_interations": 300,
         "max_image_size": (819, 1137),
-        "canvas": (952, 1360)
+        "canvas": (952, 1360),
+        "svm_liner": {
+            "model_path": "models/signetf_lambda0.95.pkl"
+        },
+        "svm_rbf": {
+            "model_path": "models/signetf_lambda0.999.pkl"
+        }
     }
     return config
