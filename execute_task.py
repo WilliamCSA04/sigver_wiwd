@@ -55,15 +55,14 @@ print("Loading list for genuine users to train")
 
 print("Starting preprocess genuine signatures for train")
 for user in train_genuine_users:
+    train_set["genuines"] = []
     path = config["dataset_path"] + user
     genuine_signatures = get_genuines(path, train_config["genuine"])
     for image in genuine_signatures:
         image_path = path+"/"+image
         add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["genuines"], model)
 
-
-
-print("Train set:")
-print("Train Genuines: " + str(len(train_set["genuines"])))
-print("Train Skilled: " + str(len(train_set["skilled"])))
-print("Train Random: " + str(len(train_set["random"])))
+    print("Train set:")
+    print("Train Genuines: " + str(len(train_set["genuines"])))
+    print("Train Skilled: " + str(len(train_set["skilled"])))
+    print("Train Random: " + str(len(train_set["random"])))
