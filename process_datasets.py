@@ -6,6 +6,7 @@ import scipy.io
 import classifier
 import random
 from scipy.misc import imread
+from scipy.misc import imresize
 from preprocess.normalize import preprocess_signature
 from cnn_model import CNNModel
 from generate_set import split_into_train_test
@@ -13,9 +14,9 @@ from process_helper import validate_train_test
 from metrics import average, standard_deviation
 
 datasets_paths = [] 
-model_path = "models/signet.pkl" #Always will use this model
-#canvas_size = (952, 1360)  # Maximum signature size
-canvas_size = (1768, 2176)  # Maximum signature size
+model_path = "models/signetf_lambda0.95.pkl" #Always will use this model
+img_max_size = (819, 1137)  # Maximum signature size
+#img_max_size = (1768, 2176)  # Maximum signature size
 
 dataset = ""
 
@@ -59,12 +60,12 @@ mcyt_genuine_candidates = list(mcyt_folders)
 gpds_160_path = "datasets/GPDS160/"
 gpds_160_folders = os.listdir(gpds_160_path)
 gpds_160_folders = [folder + "/" for folder in gpds_160_folders]
-gpds_160_genuine_candidates = list(gpds_160_folders)
+gpds_160_genuine_candidates = list(gpds_160_folders[:160])
 
 gpds_300_path = "datasets/GPDS300/"
 gpds_300_folders = os.listdir(gpds_300_path)
 gpds_300_folders = [folder + "/" for folder in gpds_300_folders]
-gpds_300_genuine_candidates = list(gpds_300_folders)
+gpds_300_genuine_candidates = list(gpds_300_folders[:300])
 
 gpds_50_path = "datasets/GPDS50/"
 gpds_50_folders = os.listdir(gpds_50_path)
@@ -78,6 +79,19 @@ def add_feature_vector_from_a_image(image, canvas, sets_processed):
         sets_processed.append(images_dictionary[image])
     else:
         original = imread(image, flatten=1)
+        height, width = original.shape
+        if height > img_max_size[0]:
+            diff = height - img_max_size[0]
+            percentage = (100*diff)/height
+            original = imresize(original, 100-percentage)
+            height, width = original.shape
+        if width > img_max_size[1]:
+            diff = width - img_max_size[1]
+            percentage = (100*diff)/width
+            original = imresize(original, 100-percentage)
+            height, width = original.shape
+
+        
         processed = preprocess_signature(original, canvas)
         images_dictionary[image] = model.get_feature_vector(processed)[0]
         sets_processed.append(images_dictionary[image])
@@ -130,9 +144,10 @@ for number_of_interation in range(number_of_interations):
         test_sets.append(gpds_160_test_set)
         classifications.append(gpds_160_train_classification)
         options.append([gpds_160_forgery_options[1], gpds_160_random_options[1]])
-        canvas.append((1768, 2176))
+        canvas.append((952, 1360))
         svm_genuine_weight = (gpds_160_random_options[0]*159)/gpds_160_genuine_options[0]
         svm_weights.append({0: 1, 1: svm_genuine_weight})
+        print("This dataset has for train: genuine samples: " + str(len(gpds_160_train_set[0])) + " ,Forgery: " + str(len(gpds_160_train_set[1])) + " ,Random: " + str(len(gpds_160_train_set[2])))
         print("This dataset has for test: genuine samples: " + str(len(gpds_160_test_set[0])) + " ,Forgery: " + str(len(gpds_160_test_set[1])) + " ,Random: " + str(len(gpds_160_test_set[2])))
 
     if(dataset == "GPDS300" or dataset == ""):
@@ -151,7 +166,7 @@ for number_of_interation in range(number_of_interations):
         test_sets.append(gpds_300_test_set)
         classifications.append(gpds_300_train_classification)
         options.append([gpds_300_forgery_options[1], gpds_300_random_options[1]])
-        canvas.append((1768, 2176))
+        canvas.append((952, 1360))
         svm_genuine_weight = (gpds_300_random_options[0]*299)/gpds_300_genuine_options[0]
         svm_weights.append({0: 1, 1: svm_genuine_weight})
         print("This dataset has for test: genuine samples: " + str(len(gpds_300_test_set[0])) + " ,Forgery: " + str(len(gpds_300_test_set[1])) + " ,Random: " + str(len(gpds_300_test_set[2])))
@@ -172,7 +187,7 @@ for number_of_interation in range(number_of_interations):
         test_sets.append(gpds_50_test_set)
         classifications.append(gpds_50_train_classification)
         options.append([gpds_50_forgery_options[1], gpds_50_random_options[1]])
-        canvas.append((1768, 2176))
+        canvas.append((952, 1360))
         svm_genuine_weight = (gpds_50_random_options[0]*299)/gpds_50_genuine_options[0]
         svm_weights.append({0: 1, 1: svm_genuine_weight})
         print("This dataset has for test: genuine samples: " + str(len(gpds_50_test_set[0])) + " ,Forgery: " + str(len(gpds_50_test_set[1])) + " ,Random: " + str(len(gpds_50_test_set[2])))
