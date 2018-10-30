@@ -36,21 +36,10 @@ svm = config["svm_linear"]
 model = CNNModel(signet, svm["model_path"])
 images_dictionary = {}
 
-train_genuine_users = get_signature_folders(config["dataset_path"])
-print("Loading list for genuine users to train")
-
-print("Starting preprocess genuine signatures for train")
-for user in train_genuine_users:
-    path = config["dataset_path"] + user
-    train_config = config["train_config"]
-    genuine_signatures = get_genuines(path, train_config["genuine"])
-    for image in genuine_signatures:
-        image_path = path+"/"+image
-        add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["genuines"], model)
-
-
 train_random_users = get_signature_folders(config["dataset_for_random_path"])
 print("Loading list for random users to train")
+
+train_config = config["train_config"]
 
 print("Starting preprocess random signatures for train")
 for user in train_random_users:
@@ -59,6 +48,20 @@ for user in train_random_users:
     for image in random_signatures:
         image_path = path+"/"+image
         add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["random"], model)
+
+
+train_genuine_users = get_signature_folders(config["dataset_path"])
+print("Loading list for genuine users to train")
+
+print("Starting preprocess genuine signatures for train")
+for user in train_genuine_users:
+    path = config["dataset_path"] + user
+    genuine_signatures = get_genuines(path, train_config["genuine"])
+    for image in genuine_signatures:
+        image_path = path+"/"+image
+        add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["genuines"], model)
+
+
 
 print("Train set:")
 print("Train Genuines: " + str(len(train_set["genuines"])))
