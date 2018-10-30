@@ -1,6 +1,9 @@
 import os
 from process_helper import filter_genuine, filter_forgery, remove_invalid_files
 
+def get_signature_folders(path):
+    return os.listdir(path)
+
 def get_genuines(path, number_of_signatures):
     signatures = __get_signatures(path)
     __validate_number_of_signatures(len(signatures), number_of_signatures)
