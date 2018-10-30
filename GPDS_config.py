@@ -22,7 +22,8 @@ def gpds160_config():
             "skilled": 10,
             "random": 10
         },
-        "number_of_interations": 160,
+        "number_of_trains": 160,
+        "number_of_tests_by_user": 100,
         "max_image_size": (819, 1137),
         "canvas": (952, 1360),
         "svm_linear": svm_linear,
@@ -44,7 +45,8 @@ def gpds300_config():
             "skilled": 10,
             "random": 10
         },
-        "number_of_interations": 300,
+        "number_of_trains": 300,
+        "number_of_tests_by_user": 100,
         "max_image_size": (819, 1137),
         "canvas": (952, 1360),
         "svm_liner": svm_linear,
