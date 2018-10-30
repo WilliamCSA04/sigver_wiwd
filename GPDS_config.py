@@ -8,6 +8,10 @@ svm_rbf = {
             "c-minus": 1,
             "gamma": 2**(-11)
         }
+signature_numbers_by_user = {
+            "genuine": 24,
+            "skilled": 30,
+        }
 def gpds160_config():
     config = {
         "dataset_path": "datasets/gpds160/",
@@ -22,6 +26,7 @@ def gpds160_config():
             "skilled": 10,
             "random": 10
         },
+        "signature_numbers_by_user": signature_numbers_by_user,
         "number_of_trains": 160,
         "number_of_tests_by_user": 100,
         "max_image_size": (819, 1137),
@@ -45,6 +50,7 @@ def gpds300_config():
             "skilled": 10,
             "random": 10
         },
+        "signature_numbers_by_user": signature_numbers_by_user,
         "number_of_trains": 300,
         "number_of_tests_by_user": 100,
         "max_image_size": (819, 1137),
