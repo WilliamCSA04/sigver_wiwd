@@ -10,8 +10,8 @@ svm_rbf = {
         }
 def gpds160_config():
     config = {
-        "dataset_path": "/datasets/gpds160/",
-        "dataset_for_random_path": "/datasets/gpds160-RANDOM/",
+        "dataset_path": "datasets/gpds160/",
+        "dataset_for_random_path": "datasets/gpds160-RANDOM/",
         "train_config": {
             "genuine": 14,
             "skilled": 0,
@@ -33,8 +33,8 @@ def gpds160_config():
 
 def gpds300_config():
     config = {
-        "dataset_path": "/datasets/gpds300/",
-        "dataset_for_random_path": "/datasets/gpds300-RANDOM/",
+        "dataset_path": "datasets/gpds300/",
+        "dataset_for_random_path": "datasets/gpds300-RANDOM/",
         "train_config": {
             "genuine": 14,
             "skilled": 0,
