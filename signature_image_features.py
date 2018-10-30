@@ -1,7 +1,8 @@
 from scipy.misc import imread
 from scipy.misc import imresize
+from preprocess.normalize import preprocess_signature
 
-def add_feature_vector_from_a_image(images_dictionary, image, img_max_size, canvas, sets_processed):
+def add_feature_vector_from_a_image(images_dictionary, image, img_max_size, canvas, sets_processed, model):
     if image in images_dictionary.keys():
         sets_processed.append(images_dictionary[image])
     else:
