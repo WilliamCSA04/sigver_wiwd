@@ -1,12 +1,14 @@
 svm_linear = {
+            "global_threshhold": 0.17234866241479857,
             "model_path": "models/signetf_lambda0.95.pkl",
             "c-minus": 1,
-            "gamma": "auto"
+            "gamma": "auto",
         }
 svm_rbf = {
+            "global_threhshold": (-0.26488806589512859),
             "model_path": "models/signetf_lambda0.999.pkl",
             "c-minus": 1,
-            "gamma": 2**(-11)
+            "gamma": 2**(-11),
         }
 signature_numbers_by_user = {
             "genuine": 24,
@@ -27,8 +29,8 @@ def gpds160_config():
             "random": 10
         },
         "signature_numbers_by_user": signature_numbers_by_user,
-        "number_of_trains": 160,
-        "number_of_tests_by_user": 100,
+        "number_of_trains": 1,
+        "number_of_tests_by_user": 5,
         "max_image_size": (819, 1137),
         "canvas": (952, 1360),
         "svm_linear": svm_linear,
