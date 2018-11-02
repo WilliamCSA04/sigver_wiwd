@@ -125,9 +125,9 @@ for train_counter in range(0, config["number_of_trains"]):
                 test_classes.append(0)
             c_plus = len(train_set["random"])/len(train_set["genuines"])
             weights = {0: svm["c-minus"], 1: c_plus}
-            partial_results = classifier.svm(data_train, data_test, train_classes, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], gamma = svm["gamma"], weights = weights)
-            for index, value in enumerate(partial_results):
-                results[index].append(value)
+            clf = classifier.svm(data_train, train_classes, gamma = svm["gamma"], weights = weights)
+            
+            
 
 print("Results: ")
 print("===USER AVG===: ")
