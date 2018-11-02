@@ -130,8 +130,16 @@ for user in train_genuine_users:
         for i in test_set["random"]:
             test_classes.append(0)
         test_sets.append(data_test)
-    results = classifier.test(clf, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], svm["global_threshhold"])
-            
+    partial_results = classifier.test(clf, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], svm["global_threshhold"])
+    results[0].append(partial_results[0])
+    results[1].append(partial_results[1])
+    results[2].append(partial_results[2])
+    results[3].append(partial_results[3])
+    results[4].append(partial_results[4])
+    results[5].append(partial_results[5])
+    results[6].append(partial_results[6])
+    results[7].append(partial_results[7])
+    results[8].append(partial_results[8])        
 
 print(results)
 
