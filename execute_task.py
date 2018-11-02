@@ -6,6 +6,7 @@ from cnn_model import CNNModel
 from gpds_signatures import *
 from signature_image_features import add_feature_vector_from_a_image
 from metrics import *
+from process_helper import validate_train_test
 
 dataset = sys.argv[1]
 
@@ -120,6 +121,7 @@ for user in train_genuine_users:
         print("Test Random: " + str(len(test_set["random"])))
 
         data_test = test_set["genuines"] + test_set["skilled"] + test_set["random"]
+        validate_train_test(data_train, data_test)
         test_classes = []
         for i in test_set["genuines"]:
             test_classes.append(1)
@@ -128,9 +130,10 @@ for user in train_genuine_users:
         for i in test_set["random"]:
             test_classes.append(0)
         test_sets.append(data_test)
-    
     results = classifier.test(clf, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], svm["global_threshhold"])
             
+
+print(results)
 
 print("Results: ")
 print("===USER AVG===: ")
