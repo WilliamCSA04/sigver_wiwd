@@ -42,7 +42,7 @@ train_config = config["train_config"]
 
 print("Starting preprocess random signatures for train")
 for user in random_users:
-
+    
     path = config["dataset_for_random_path"] + user
     random_signatures = get_genuines(path, train_config["random"])
     for image in random_signatures:
@@ -53,79 +53,81 @@ for user in random_users:
 train_genuine_users = get_signature_folders(config["dataset_path"])
 print("Loading list for genuine users to train")
 
-print("Starting preprocess genuine signatures for train")
-for user in train_genuine_users:
-    train_set["genuines"] = []
-    path = config["dataset_path"] + user
-    genuine_for_train = train_config["genuine"]
-    genuine_signatures = get_genuines(path, genuine_for_train)
-    for image in genuine_signatures:
-        image_path = path+"/"+image
-        add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["genuines"], model)
-
-    print("Train set:")
-    print("Train Genuines: " + str(len(train_set["genuines"])))
-    print("Train Skilled: " + str(len(train_set["skilled"])))
-    print("Train Random: " + str(len(train_set["random"])))
-    test_set = {
-        "genuines": [],
-        "skilled": [],
-        "random": []
-    }
-    max_signature_numbers = config["signature_numbers_by_user"]
-    test_config = config["test_config"]
-    print("Loading genuine signatures to test")
-    genuine_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
-    print("Starting preprocess genuine signatures to test")
-    for image in genuine_signatures:
-        image_path = path+"/"+image
-        add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["genuines"], model)
-    
-    print("Loading skilled signatures to test")
-    skilled_signatures = get_skilled(path, test_config['skilled'])
-    print("Starting preprocess skilled signatures to test")
-    for image in genuine_signatures:
-        image_path = path+"/"+image
-        add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["skilled"], model)
-    
-    print("Loading random signatures to test")
-    
-    temp_random_images = []
-    for user in random_users:
-        path = config["dataset_for_random_path"] + user
-        random_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
-        for image in random_signatures:
+for train_counter in range(0, config["number_of_trains"]):
+    print("Starting preprocess genuine signatures for train")
+    for user in train_genuine_users:
+        train_set["genuines"] = []
+        path = config["dataset_path"] + user
+        genuine_for_train = train_config["genuine"]
+        genuine_signatures = get_genuines(path, genuine_for_train)
+        for image in genuine_signatures:
             image_path = path+"/"+image
-            temp_random_images.append(image_path)
+            add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["genuines"], model)
 
-    random.shuffle(temp_random_images)
-    for image_path in temp_random_images[:test_config["random"]]:
-        add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["random"], model)
+        print("Train set:")
+        print("Train Genuines: " + str(len(train_set["genuines"])))
+        print("Train Skilled: " + str(len(train_set["skilled"])))
+        print("Train Random: " + str(len(train_set["random"])))
+        max_signature_numbers = config["signature_numbers_by_user"]
+        for time in range(0, config["number_of_tests_by_user"]):
+            test_set = {
+                "genuines": [],
+                "skilled": [],
+                "random": []
+            }
+            test_config = config["test_config"]
+            print("Loading genuine signatures to test")
+            genuine_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
+            print("Starting preprocess genuine signatures to test")
+            for image in genuine_signatures:
+                image_path = path+"/"+image
+                add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["genuines"], model)
+            
+            print("Loading skilled signatures to test")
+            skilled_signatures = get_skilled(path, test_config['skilled'])
+            print("Starting preprocess skilled signatures to test")
+            for image in genuine_signatures:
+                image_path = path+"/"+image
+                add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["skilled"], model)
+            
+            print("Loading random signatures to test")
+            
+            temp_random_images = []
+            for user in random_users:
+                path = config["dataset_for_random_path"] + user
+                random_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
+                for image in random_signatures:
+                    image_path = path+"/"+image
+                    temp_random_images.append(image_path)
 
-    print("Test set:")
-    print("Test Genuines: " + str(len(test_set["genuines"])))
-    print("Test Skilled: " + str(len(test_set["skilled"])))
-    print("Test Random: " + str(len(test_set["random"])))
+            random.shuffle(temp_random_images)
+            for image_path in temp_random_images[:test_config["random"]]:
+                add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["random"], model)
 
-    data_train = train_set["genuines"] + train_set["random"]
-    data_test = test_set["genuines"] + test_set["skilled"] + test_set["random"]
-    train_classes = []
-    for i in train_set["genuines"]:
-        train_classes.append(1)
-    for i in train_set["random"]:
-        train_classes.append(0)
-    test_classes = []
-    for i in test_set["genuines"]:
-        test_classes.append(1)
-    for i in test_set["skilled"]:
-        test_classes.append(0)
-    for i in test_set["random"]:
-        test_classes.append(0)
-    c_plus = len(train_set["random"])/len(train_set["genuines"])
-    weights = {0: svm["c-minus"], 1: c_plus}
-    partial_results = classifier.svm(data_train, data_test, train_classes, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], gamma = svm["gamma"], weights = weights)
-    for index, value in enumerate(partial_results):
-        results[index].append(value)
+            print("Test set:")
+            print("Test Genuines: " + str(len(test_set["genuines"])))
+            print("Test Skilled: " + str(len(test_set["skilled"])))
+            print("Test Random: " + str(len(test_set["random"])))
+
+            data_train = train_set["genuines"] + train_set["random"]
+            data_test = test_set["genuines"] + test_set["skilled"] + test_set["random"]
+            train_classes = []
+            for i in train_set["genuines"]:
+                train_classes.append(1)
+            for i in train_set["random"]:
+                train_classes.append(0)
+            test_classes = []
+            for i in test_set["genuines"]:
+                test_classes.append(1)
+            for i in test_set["skilled"]:
+                test_classes.append(0)
+            for i in test_set["random"]:
+                test_classes.append(0)
+            c_plus = len(train_set["random"])/len(train_set["genuines"])
+            weights = {0: svm["c-minus"], 1: c_plus}
+            partial_results = classifier.svm(data_train, data_test, train_classes, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], gamma = svm["gamma"], weights = weights)
+            for index, value in enumerate(partial_results):
+                results[index].append(value)
 
 print("Results: ")
 print("===USER AVG===: ")
