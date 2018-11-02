@@ -39,13 +39,13 @@ def equal_error_rate_with_verification(far_skilled, frr, diff_far_frr):
         return (frr, diff, True)
     else:
         if diff_far_frr > diff:
-            return (min(far_skilled, frr), diff, False)
+            return (diff, diff, False)
         else:
-            return (min(far_skilled, frr), diff_far_frr, False)
+            return (diff_far_frr, diff_far_frr, False)
 
 def equal_error_rate(far_skilled, frr):
     diff = abs(far_skilled - frr)
     if(diff == 0):
         return frr
     else:
-        return min(far_skilled, frr)
+        return diff

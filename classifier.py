@@ -40,7 +40,8 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
             prediction = __prediction_list(threshold[1], prediction_probability)
             frr, far_skilled, far_random = __classification_metrics(prediction, number_of_genuine, number_of_skilled, number_of_random)
             eer, diff_threshold, best_eer = equal_error_rate_with_verification(far_skilled, frr, diff)
-            if diff_threshold != diff:
+            if diff_threshold < diff:
+                diff = diff_threshold
                 frr_user, far_skilled_user, far_random_user, eer_user = frr, far_skilled, far_random, eer
             if best_eer:
                 break
