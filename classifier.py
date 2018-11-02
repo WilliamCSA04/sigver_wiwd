@@ -5,30 +5,28 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_curve, auc
 from metrics import false_rejection_rate, false_acceptance_rate
 
-def knn(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, k = 1, weight='uniform'):
+def knn(data_train, train_classes, k = 1, weight='uniform'):
     clf = neighbors.KNeighborsClassifier(k, weights=weight)
-    name = "KNN by " + weight
-    return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name)
+    return clf.fit(data_train, train_classes)
 
 
 
-def tree(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random):
+def tree(data_train, train_classes):
     clf = treeClassifier.DecisionTreeClassifier()
-    return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="Tree")
+    return clf.fit(data_train, train_classes)
     
 
-def svm(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, gamma='auto', weights = None):
-    clf = svmClassifier.SVC(probability=True, class_weight=weights, kernel="linear", gamma = gamma)
-    return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="SVM")
+def svm(data_train, train_classes, gamma='auto', weights = None, kernel="linear"):
+    clf = svmClassifier.SVC(probability=True, class_weight = weights, kernel = kernel, gamma = gamma)
+    return clf.fit(data_train, train_classes)
     
 
-def mlp(data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1):
+def mlp(data_train, train_classes, solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1):
     clf = MLPClassifier(solver=solver, alpha=alpha, hidden_layer_sizes=hidden_layer_sizes, random_state=random_state)
-    return execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name="MLP")
+    return clf.fit(data_train, train_classes)
     
 
-def execute_test(clf, data_train, data_test, expected, correct_class, number_of_genuine, number_of_skilled, number_of_random, name):
-    clf.fit(data_train, expected)
+def execute_test(clf, data_train, data_test, train_classes, correct_class, number_of_genuine, number_of_skilled, number_of_random, name):
     prediction_probability = clf.predict_proba(data_test)
     scores = prediction_probability[:, 1]
     fpr, tpr, thresholds = roc_curve(correct_class, scores)
