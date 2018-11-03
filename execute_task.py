@@ -36,6 +36,9 @@ print(svm)
 model = CNNModel(signet, svm["model_path"])
 images_dictionary = {}
 
+list_of_signatures_use_on_train = []
+list_of_signatures_use_on_test = []
+
 random_users = get_signature_folders(config["dataset_for_random_path"])
 print("Loading list for random users to train")
 
@@ -48,8 +51,9 @@ for user in random_users:
     random_signatures = get_genuines(path, train_config["random"])
     for image in random_signatures:
         image_path = path+"/"+image
+        list_of_signatures_use_on_train.append(image_path)
         add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["random"], model)
-
+        print(images_dictionary)
 
 train_genuine_users = get_signature_folders(config["dataset_path"])
 print("Loading list for genuine users to train")
@@ -62,6 +66,7 @@ for user in train_genuine_users:
     genuine_signatures = get_genuines(path, genuine_for_train)
     for image in genuine_signatures:
         image_path = path+"/"+image
+        list_of_signatures_use_on_train.append(image_path)
         add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["genuines"], model)
 
     print("Train set:")
@@ -92,6 +97,7 @@ for user in train_genuine_users:
         print("Starting preprocess genuine signatures to test")
         for image in genuine_signatures:
             image_path = path+"/"+image
+            list_of_signatures_use_on_test.append(image_path)
             add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["genuines"], model)
         
         print("Loading skilled signatures to test")
@@ -99,6 +105,7 @@ for user in train_genuine_users:
         print("Starting preprocess skilled signatures to test")
         for image in genuine_signatures:
             image_path = path+"/"+image
+            list_of_signatures_use_on_test.append(image_path)
             add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["skilled"], model)
         
         print("Loading random signatures to test")
@@ -109,6 +116,7 @@ for user in train_genuine_users:
             random_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
             for image in random_signatures:
                 image_path = path+"/"+image
+                list_of_signatures_use_on_test.append(image_path)
                 temp_random_images.append(image_path)
 
         random.shuffle(temp_random_images)
@@ -120,8 +128,8 @@ for user in train_genuine_users:
         print("Test Skilled: " + str(len(test_set["skilled"])))
         print("Test Random: " + str(len(test_set["random"])))
 
+        validate_train_test(list_of_signatures_use_on_train, list_of_signatures_use_on_test)
         data_test = test_set["genuines"] + test_set["skilled"] + test_set["random"]
-        validate_train_test(data_train, data_test)
         test_classes = []
         for i in test_set["genuines"]:
             test_classes.append(1)
@@ -131,15 +139,15 @@ for user in train_genuine_users:
             test_classes.append(0)
         test_sets.append(data_test)
     partial_results = classifier.test(clf, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], svm["global_threshhold"])
-    results[0].append(partial_results[0])
-    results[1].append(partial_results[1])
-    results[2].append(partial_results[2])
-    results[3].append(partial_results[3])
-    results[4].append(partial_results[4])
-    results[5].append(partial_results[5])
-    results[6].append(partial_results[6])
-    results[7].append(partial_results[7])
-    results[8].append(partial_results[8])        
+    results[0] += (partial_results[0])
+    results[1] += (partial_results[1])
+    results[2] += (partial_results[2])
+    results[3] += (partial_results[3])
+    results[4] += (partial_results[4])
+    results[5] += (partial_results[5])
+    results[6] += (partial_results[6])
+    results[7] += (partial_results[7])
+    results[8] += (partial_results[8])        
 
 print(results)
 
