@@ -12,11 +12,11 @@ dataset = sys.argv[1]
 
 config = {}
 if dataset.lower() == "gpds160":
-    from gpds_config import gpds160_config
+    from gpds_dataset_config import gpds160_config
     config = gpds160_config()
     print("Get GPDS-160 configurations")
 elif dataset.lower() == "gpds300":
-    from gpds_config import gpds300_config
+    from gpds_dataset_config import gpds300_config
     config = gpds300_config()
     print("Get GPDS-300 configurations")
 else:
@@ -29,7 +29,7 @@ train_set = {
     "random": []
 }
 
-results = [[], [], [], [], [], [], [], [], []]
+results = [[], [], [], [], [], [], [], [], [], []]
 
 svm = config["svm_linear"]
 print(svm)
@@ -82,7 +82,7 @@ for user in train_genuine_users:
     for i in train_set["random"]:
         train_classes.append(0)
     c_plus = len(train_set["random"])/len(train_set["genuines"])
-    weights = {0: svm["c-minus"], 1: c_plus}
+    weights = {1: c_plus, 0: svm["c-minus"]}
     clf = classifier.svm(data_train, train_classes, gamma = svm["gamma"], weights = weights)
     test_sets = []
     for time in range(0, config["number_of_tests_by_user"]):
@@ -93,23 +93,18 @@ for user in train_genuine_users:
             "random": []
         }
         test_config = config["test_config"]
-        print("Loading genuine signatures to test")
         genuine_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
-        print("Starting preprocess genuine signatures to test")
         for image in genuine_signatures:
             image_path = path+"/"+image
             list_of_signatures_use_on_test.append(image_path)
             add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["genuines"], model)
         
-        print("Loading skilled signatures to test")
         skilled_signatures = get_skilled(path, test_config['skilled'])
-        print("Starting preprocess skilled signatures to test")
         for image in genuine_signatures:
             image_path = path+"/"+image
             list_of_signatures_use_on_test.append(image_path)
             add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["skilled"], model)
         
-        print("Loading random signatures to test")
         
         temp_random_images = []
         for user_test in random_users:
@@ -124,7 +119,6 @@ for user in train_genuine_users:
             list_of_signatures_use_on_test.append(image_path)
             add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["random"], model)
 
-        validate_train_test(list_of_signatures_use_on_train, list_of_signatures_use_on_test)
         data_test = test_set["genuines"] + test_set["skilled"] + test_set["random"]
         test_classes = []
         for i in test_set["genuines"]:
@@ -144,6 +138,7 @@ for user in train_genuine_users:
     results[6] += (partial_results[6])
     results[7] += (partial_results[7])
     results[8] += (partial_results[8])        
+    results[9] += (partial_results[9])        
 
 print(results)
 
@@ -172,3 +167,5 @@ print("EER: " + str(standard_deviation(results[7])))
 print("===AUC===")
 print("AVG: " + str(average(results[8])))
 print("SD: " + str(standard_deviation(results[8])))
+print("===THRESHOLD===")
+print("AVG: " + str(average(results[9])))

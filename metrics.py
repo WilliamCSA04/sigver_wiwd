@@ -35,6 +35,8 @@ def false_acceptance_rate(forgery_quantity, false_positives):
 
 def equal_error_rate_with_verification(far_skilled, frr, diff_far_frr):
     diff = abs(far_skilled - frr)
+    print(far_skilled)
+    print(frr)
     if(diff == 0):
         return (frr, diff, True)
     else:

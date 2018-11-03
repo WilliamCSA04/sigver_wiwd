@@ -28,24 +28,30 @@ def mlp(data_train, train_classes, solver='lbfgs', alpha=1e-5, hidden_layer_size
     
 
 def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, number_of_random, global_threshold):
-    results = [[], [], [], [], [], [], [], [], []]    
+    results = [[], [], [], [], [], [], [], [], [], []]    
     for test_set in test_sets:
         prediction_probability = clf.predict_proba(test_set)
         scores = prediction_probability[:, 1]
+        list_of_thresholds = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
         fpr, tpr, thresholds = roc_curve(test_classes, scores)
+        print(scores)
+        print(thresholds)
+        list_of_thresholds += scores.tolist()
+        list_of_thresholds += thresholds.tolist()
         auc_metric = auc(fpr, tpr)
         diff = sys.maxint
         frr_user, far_skilled_user, far_random_user, eer_user = 0, 0, 0, 0
-        for threshold in prediction_probability:
-            prediction = __prediction_list(threshold[1], prediction_probability)
+        for threshold in list_of_thresholds:
+            prediction = __prediction_list(threshold, list_of_thresholds)
             frr, far_skilled, far_random = __classification_metrics(prediction, number_of_genuine, number_of_skilled, number_of_random)
             eer, diff_threshold, best_eer = equal_error_rate_with_verification(far_skilled, frr, diff)
             if diff_threshold < diff:
                 diff = diff_threshold
                 frr_user, far_skilled_user, far_random_user, eer_user = frr, far_skilled, far_random, eer
             if best_eer:
+                print("EER FOUND" + str(threshold))
                 break
-        prediction = __prediction_list(global_threshold, prediction_probability)
+        prediction = __prediction_list(global_threshold, list_of_thresholds)
         frr_global, far_skilled_global, far_random_global = __classification_metrics(prediction, number_of_genuine, number_of_skilled, number_of_random)
         eer_global = equal_error_rate(far_skilled, frr)
         results[0].append(frr_user)
@@ -57,12 +63,13 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
         results[6].append(far_random_global)
         results[7].append(eer_global)
         results[8].append(auc_metric)
+        results[9].append(threshold)
     return results
 
 def __prediction_list(threshold, prediction_probability):
     prediction = []
     for pred in prediction_probability:
-        if pred[1] <= threshold:
+        if pred <= threshold:
             prediction.append(0)
         else:
             prediction.append(1)
