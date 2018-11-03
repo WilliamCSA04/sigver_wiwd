@@ -112,22 +112,17 @@ for user in train_genuine_users:
         print("Loading random signatures to test")
         
         temp_random_images = []
-        for user in random_users:
-            path = config["dataset_for_random_path"] + user
+        for user_test in random_users:
+            path = config["dataset_for_random_path"] + user_test
             random_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
             for image in random_signatures:
                 image_path = path+"/"+image
-                list_of_signatures_use_on_test.append(image_path)
                 temp_random_images.append(image_path)
 
         random.shuffle(temp_random_images)
         for image_path in temp_random_images[:test_config["random"]]:
+            list_of_signatures_use_on_test.append(image_path)
             add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["random"], model)
-
-        print("Test set:")
-        print("Test Genuines: " + str(len(test_set["genuines"])))
-        print("Test Skilled: " + str(len(test_set["skilled"])))
-        print("Test Random: " + str(len(test_set["random"])))
 
         validate_train_test(list_of_signatures_use_on_train, list_of_signatures_use_on_test)
         data_test = test_set["genuines"] + test_set["skilled"] + test_set["random"]
