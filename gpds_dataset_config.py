@@ -2,7 +2,7 @@ svm_linear = {
             "global_threshhold": 0.17234866241479857,
             "model_path": "models/signetf_lambda0.95.pkl",
             "c-minus": 1,
-            "gamma": "auto",
+            "gamma": "scale",
         }
 svm_rbf = {
             "global_threhshold": (-0.26488806589512859),
