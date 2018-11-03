@@ -57,7 +57,6 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
         results[6].append(far_random_global)
         results[7].append(eer_global)
         results[8].append(auc_metric)
-    print(results)
     return results
 
 def __prediction_list(threshold, prediction_probability):

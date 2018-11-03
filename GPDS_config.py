@@ -29,8 +29,7 @@ def gpds160_config():
             "random": 10
         },
         "signature_numbers_by_user": signature_numbers_by_user,
-        "number_of_trains": 1,
-        "number_of_tests_by_user": 5,
+        "number_of_tests_by_user": 100,
         "max_image_size": (819, 1137),
         "canvas": (952, 1360),
         "svm_linear": svm_linear,
@@ -53,7 +52,6 @@ def gpds300_config():
             "random": 10
         },
         "signature_numbers_by_user": signature_numbers_by_user,
-        "number_of_trains": 300,
         "number_of_tests_by_user": 100,
         "max_image_size": (819, 1137),
         "canvas": (952, 1360),

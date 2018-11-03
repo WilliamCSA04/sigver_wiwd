@@ -45,15 +45,16 @@ print("Loading list for random users to train")
 train_config = config["train_config"]
 
 print("Starting preprocess random signatures for train")
-for user in random_users:
+random_users_size = len(random_users)
+for count, user in enumerate(random_users):
     
+    print("Processing Random Signatures " + str(count) + "/" +str(random_users_size))
     path = config["dataset_for_random_path"] + user
     random_signatures = get_genuines(path, train_config["random"])
     for image in random_signatures:
         image_path = path+"/"+image
         list_of_signatures_use_on_train.append(image_path)
         add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], train_set["random"], model)
-        print(images_dictionary)
 
 train_genuine_users = get_signature_folders(config["dataset_path"])
 print("Loading list for genuine users to train")
