@@ -94,6 +94,7 @@ for user in train_genuine_users:
         }
         test_config = config["test_config"]
         genuine_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
+        print(path)
         for image in genuine_signatures:
             image_path = path+"/"+image
             list_of_signatures_use_on_test.append(image_path)
@@ -108,10 +109,10 @@ for user in train_genuine_users:
         
         temp_random_images = []
         for user_test in random_users:
-            path = config["dataset_for_random_path"] + user_test
-            random_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
+            path_random = config["dataset_for_random_path"] + user_test
+            random_signatures = get_genuines(path_random, max_signature_numbers["genuine"])[genuine_for_train:]
             for image in random_signatures:
-                image_path = path+"/"+image
+                image_path = path_random+"/"+image
                 temp_random_images.append(image_path)
 
         random.shuffle(temp_random_images)

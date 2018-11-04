@@ -34,8 +34,6 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
         scores = prediction_probability[:, 1]
         list_of_thresholds = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
         fpr, tpr, thresholds = roc_curve(test_classes, scores)
-        print(scores)
-        print(thresholds)
         list_of_thresholds += scores.tolist()
         list_of_thresholds += thresholds.tolist()
         auc_metric = auc(fpr, tpr)
