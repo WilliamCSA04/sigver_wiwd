@@ -100,7 +100,7 @@ for user in train_genuine_users:
             add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["genuines"], model)
         
         skilled_signatures = get_skilled(path, test_config['skilled'])
-        for image in genuine_signatures:
+        for image in skilled_signatures:
             image_path = path+"/"+image
             list_of_signatures_use_on_test.append(image_path)
             add_feature_vector_from_a_image(images_dictionary, image_path, config["max_image_size"], config["canvas"], test_set["skilled"], model)
