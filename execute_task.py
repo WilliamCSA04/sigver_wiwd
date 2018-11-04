@@ -94,7 +94,6 @@ for user in train_genuine_users:
         }
         test_config = config["test_config"]
         genuine_signatures = get_genuines(path, max_signature_numbers["genuine"])[genuine_for_train:]
-        print(path)
         for image in genuine_signatures:
             image_path = path+"/"+image
             list_of_signatures_use_on_test.append(image_path)
@@ -141,7 +140,6 @@ for user in train_genuine_users:
     results[8] += (partial_results[8])        
     results[9] += (partial_results[9])        
 
-print(results)
 
 print("Results: ")
 print("===USER AVG===: ")

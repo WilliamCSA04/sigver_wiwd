@@ -32,10 +32,8 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
     for test_set in test_sets:
         prediction_probability = clf.predict_proba(test_set)
         scores = prediction_probability[:, 1]
-        list_of_thresholds = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
         fpr, tpr, thresholds = roc_curve(test_classes, scores)
-        list_of_thresholds += scores.tolist()
-        list_of_thresholds += thresholds.tolist()
+        list_of_thresholds = scores.tolist()
         auc_metric = auc(fpr, tpr)
         diff = sys.maxint
         frr_user, far_skilled_user, far_random_user, eer_user = 0, 0, 0, 0
@@ -47,11 +45,11 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
                 diff = diff_threshold
                 frr_user, far_skilled_user, far_random_user, eer_user = frr, far_skilled, far_random, eer
             if best_eer:
-                print("EER FOUND" + str(threshold))
+                frr_user, far_skilled_user, far_random_user, eer_user = frr, far_skilled, far_random, eer
                 break
         prediction = __prediction_list(global_threshold, list_of_thresholds)
         frr_global, far_skilled_global, far_random_global = __classification_metrics(prediction, number_of_genuine, number_of_skilled, number_of_random)
-        eer_global = equal_error_rate(far_skilled, frr)
+        eer_global = equal_error_rate(far_skilled_global, frr_global)
         results[0].append(frr_user)
         results[1].append(far_skilled_user)
         results[2].append(far_random_user)
