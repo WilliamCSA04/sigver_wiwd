@@ -1,3 +1,4 @@
+#Linear Threshold global to test: 0.261583162085
 svm_linear = {
             "global_threshhold": 0.17234866241479857,
             "model_path": "models/signetf_lambda0.95.pkl",
