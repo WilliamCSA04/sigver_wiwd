@@ -17,9 +17,8 @@ def tree(data_train, train_classes):
     return clf.fit(data_train, train_classes)
     
 
-def svm(data_train, train_classes, gamma='auto', weights = None, kernel="linear"):
-    clf = svmClassifier.SVC(probability=True, class_weight = weights, kernel = kernel, gamma = gamma)
-    return clf.fit(data_train, train_classes)
+def svm(gamma='auto', weights = None, kernel="linear"):
+    return svmClassifier.SVC(probability=True, class_weight = weights, kernel = kernel, gamma = gamma)
     
 
 def mlp(data_train, train_classes, solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1):
@@ -48,6 +47,7 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
                 frr_user, far_skilled_user, far_random_user, eer_user = frr, far_skilled, far_random, eer
                 break
         prediction = __prediction_list(global_threshold, list_of_thresholds)
+        print(prediction)
         frr_global, far_skilled_global, far_random_global = __classification_metrics(prediction, number_of_genuine, number_of_skilled, number_of_random)
         eer_global = equal_error_rate(far_skilled_global, frr_global)
         results[0].append(frr_user)

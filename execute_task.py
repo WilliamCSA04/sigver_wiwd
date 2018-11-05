@@ -49,6 +49,9 @@ images_dictionary = {}
 list_of_signatures_use_on_train = []
 list_of_signatures_use_on_test = []
 
+weights = {1: 1000, 0: svm["c-minus"]}
+svc = classifier.svm(gamma = svm["gamma"], weights = weights, kernel=svm_kernel)
+print(svc)
 random_users = get_signature_folders(config["dataset_for_random_path"])
 print("Loading list for random users to train")
 
@@ -68,7 +71,6 @@ for count, user in enumerate(random_users):
 
 train_genuine_users = get_signature_folders(config["dataset_path"])
 print("Loading list for genuine users to train")
-
 for user in train_genuine_users:
     print("Starting preprocess genuine signatures for train " + user)
     train_set["genuines"] = []
@@ -92,9 +94,9 @@ for user in train_genuine_users:
     for i in train_set["random"]:
         train_classes.append(0)
     c_plus = len(train_set["random"])/len(train_set["genuines"])
-    weights = {1: c_plus, 0: svm["c-minus"]}
-    clf = classifier.svm(data_train, train_classes, gamma = svm["gamma"], weights = weights, kernel=svm_kernel)
+    clf = svc.fit(data_train, train_classes)
     test_sets = []
+    print(c_plus)
     for time in range(0, config["number_of_tests_by_user"]):
         print("starting test" + str(time) + "/" + str(config["number_of_tests_by_user"]))
         test_set = {
