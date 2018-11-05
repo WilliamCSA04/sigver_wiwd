@@ -56,7 +56,7 @@ def gpds300_config():
         "number_of_tests_by_user": 100,
         "max_image_size": (819, 1137),
         "canvas": (952, 1360),
-        "svm_liner": svm_linear,
+        "svm_linear": svm_linear,
         "svm_rbf": svm_rbf
     }
     return config
