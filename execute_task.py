@@ -49,7 +49,7 @@ images_dictionary = {}
 list_of_signatures_use_on_train = []
 list_of_signatures_use_on_test = []
 
-weights = {1: 1000, 0: svm["c-minus"]}
+weights = {1: 721, 0: svm["c-minus"]}
 svc = classifier.svm(gamma = svm["gamma"], weights = weights, kernel=svm_kernel)
 print(svc)
 random_users = get_signature_folders(config["dataset_for_random_path"])
