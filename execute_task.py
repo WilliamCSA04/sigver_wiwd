@@ -93,7 +93,7 @@ for user in train_genuine_users:
         train_classes.append(0)
     c_plus = len(train_set["random"])/len(train_set["genuines"])
     weights = {1: c_plus, 0: svm["c-minus"]}
-    clf = classifier.svm(data_train, train_classes, gamma = svm["gamma"], weights = weights)
+    clf = classifier.svm(data_train, train_classes, gamma = svm["gamma"], weights = weights, kernel=svm_kernel)
     test_sets = []
     for time in range(0, config["number_of_tests_by_user"]):
         print("starting test" + str(time) + "/" + str(config["number_of_tests_by_user"]))
