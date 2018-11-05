@@ -9,6 +9,7 @@ from metrics import *
 from process_helper import validate_train_test
 
 dataset = sys.argv[1]
+svm_kernel = sys.argv[2]
 
 config = {}
 if dataset.lower() == "gpds160":
@@ -31,7 +32,16 @@ train_set = {
 
 results = [[], [], [], [], [], [], [], [], [], []]
 
-svm = config["svm_linear"]
+svm = None
+if svm_kernel == "linear":
+    svm = config["svm_linear"]
+elif svm_kernel == "rbf":
+    svm = config["svm_rbf"]
+else:
+    print("Invalid kernel for svm")
+    exit()
+
+
 print(svm)
 model = CNNModel(signet, svm["model_path"])
 images_dictionary = {}
