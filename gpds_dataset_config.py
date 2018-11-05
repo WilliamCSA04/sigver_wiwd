@@ -6,7 +6,7 @@ svm_linear = {
             "gamma": 'auto',
         }
 svm_rbf = {
-            "global_threhshold": (-0.26488806589512859),
+            "global_threshhold": (-0.26488806589512859),
             "model_path": "models/signetf_lambda0.999.pkl",
             "c-minus": 1,
             "gamma": 2**(-11),
