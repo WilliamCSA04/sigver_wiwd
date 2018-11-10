@@ -59,7 +59,7 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
     results[2].append(result['FAR_random'])
     results[3].append(result['EER'])
     results[4].append(result['EER_userthresholds'])
-    results[5].append(result['mean_AUC'])
+    results[5] += (result['auc_list'])
     results[6].append(result['global_threshold'])
     return results
 
