@@ -6,7 +6,7 @@ svm_linear = {
             "gamma": 'auto',
         }
 svm_rbf = {
-            "global_threshhold": (-0.26488806589512859),
+            "global_threshhold": 0.26488806589512859,
             "model_path": "models/signetf_lambda0.999.pkl",
             "c-minus": 1,
             "gamma": 2**(-11),
@@ -29,6 +29,7 @@ def gpds160_config():
             "skilled": 10,
             "random": 10
         },
+        "c-plus": 721,
         "signature_numbers_by_user": signature_numbers_by_user,
         "number_of_tests_by_user": 100,
         "max_image_size": (819, 1137),
@@ -52,6 +53,7 @@ def gpds300_config():
             "skilled": 10,
             "random": 10
         },
+        "c-plus": 581,
         "signature_numbers_by_user": signature_numbers_by_user,
         "number_of_tests_by_user": 100,
         "max_image_size": (819, 1137),
