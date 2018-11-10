@@ -30,7 +30,10 @@ train_set = {
     "random": []
 }
 
-results = [[], [], [], [], [], [], [], [], [], []]
+results = {
+    "svm_linear": [[], [], [], [], [], [], [], [], [], []],
+    "mlp": [[], [], [], [], [], [], [], [], [], []],
+}
 
 svm = None
 if svm_kernel == "linear":
@@ -97,7 +100,8 @@ for user in train_genuine_users:
     for i in train_set["random"]:
         train_classes.append(0)
     c_plus = len(train_set["random"])/len(train_set["genuines"])
-    clf = svc.fit(data_train, train_classes)
+    clf_svm = svc.fit(data_train, train_classes)
+    clf_mlp = mlp.fit(data_train, train_classes)
     test_sets = []
     print(c_plus)
     for time in range(0, config["number_of_tests_by_user"]):
@@ -143,31 +147,56 @@ for user in train_genuine_users:
         for i in test_set["random"]:
             test_classes.append(0)
         test_sets.append(data_test)
-    partial_results = classifier.test(clf, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], svm["global_threshhold"])
-    results[0] += (partial_results[0])
-    results[1] += (partial_results[1])
-    results[2] += (partial_results[2])
-    results[3] += (partial_results[3])
-    results[4] += (partial_results[4])
-    results[5] += (partial_results[5])       
-    results[6] += (partial_results[6])       
+    partial_results = classifier.test(clf_mlp, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"])
+    results["mlp"][0] += (partial_results[0])
+    results["mlp"][1] += (partial_results[1])
+    results["mlp"][2] += (partial_results[2])
+    results["mlp"][3] += (partial_results[3])
+    results["mlp"][4] += (partial_results[4])
+    results["mlp"][5] += (partial_results[5])       
+    results["mlp"][6] += (partial_results[6])       
+    partial_results = classifier.test(clf_svm, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], svm["global_threshhold"])
+    results["svm_linear"][0] += (partial_results[0])
+    results["svm_linear"][1] += (partial_results[1])
+    results["svm_linear"][2] += (partial_results[2])
+    results["svm_linear"][3] += (partial_results[3])
+    results["svm_linear"][4] += (partial_results[4])
+    results["svm_linear"][5] += (partial_results[5])       
+    results["svm_linear"][6] += (partial_results[6])  
 
-
-print("Results: ")
 print(results)
+print("Results MLP: ")
 print("===AVG===: ")
-print("FRR: " + str(average(results[0])))
-print("FAR_SKILLED: " + str(average(results[1])))
-print("FAR_RANDOM: " + str(average(results[2])))
-print("EER: " + str(average(results[3])))
-print("EER_userthresholds: " + str(average(results[4])))
-print("AUC: " + str(average(results[5])))
-print("Threshold: " + str(average(results[6])))
+print("FRR: " + str(average(results["mlp"][0])))
+print("FAR_SKILLED: " + str(average(results["mlp"][1])))
+print("FAR_RANDOM: " + str(average(results["mlp"][2])))
+print("EER: " + str(average(results["mlp"][3])))
+print("EER_userthresholds: " + str(average(results["mlp"][4])))
+print("AUC: " + str(average(results["mlp"][5])))
+print("Threshold: " + str(average(results["mlp"][6])))
 print("===SD===: ")
-print("FRR: " + str(standard_deviation(results[0])))
-print("FAR_SKILLED: " + str(standard_deviation(results[1])))
-print("FAR_RANDOM: " + str(standard_deviation(results[2])))
-print("EER: " + str(standard_deviation(results[3])))
-print("EER_userthresholds: " + str(standard_deviation(results[4])))
-print("AUC: " + str(standard_deviation(results[5])))
-print("Threshold: " + str(standard_deviation(results[6])))
+print("FRR: " + str(standard_deviation(results["mlp"][0])))
+print("FAR_SKILLED: " + str(standard_deviation(results["mlp"][1])))
+print("FAR_RANDOM: " + str(standard_deviation(results["mlp"][2])))
+print("EER: " + str(standard_deviation(results["mlp"][3])))
+print("EER_userthresholds: " + str(standard_deviation(results["mlp"][4])))
+print("AUC: " + str(standard_deviation(results["mlp"][5])))
+print("Threshold: " + str(standard_deviation(results["mlp"][6])))
+
+print("Results SVM: ")
+print("===AVG===: ")
+print("FRR: " + str(average(results["svm_linear"][0])))
+print("FAR_SKILLED: " + str(average(results["svm_linear"][1])))
+print("FAR_RANDOM: " + str(average(results["svm_linear"][2])))
+print("EER: " + str(average(results["svm_linear"][3])))
+print("EER_userthresholds: " + str(average(results["svm_linear"][4])))
+print("AUC: " + str(average(results["svm_linear"][5])))
+print("Threshold: " + str(average(results["svm_linear"][6])))
+print("===SD===: ")
+print("FRR: " + str(standard_deviation(results["svm_linear"][0])))
+print("FAR_SKILLED: " + str(standard_deviation(results["svm_linear"][1])))
+print("FAR_RANDOM: " + str(standard_deviation(results["svm_linear"][2])))
+print("EER: " + str(standard_deviation(results["svm_linear"][3])))
+print("EER_userthresholds: " + str(standard_deviation(results["svm_linear"][4])))
+print("AUC: " + str(standard_deviation(results["svm_linear"][5])))
+print("Threshold: " + str(standard_deviation(results["svm_linear"][6])))

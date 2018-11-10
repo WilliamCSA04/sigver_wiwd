@@ -23,11 +23,11 @@ def svm(gamma='auto', weights = None, kernel="linear"):
     return svmClassifier.SVC(probability=True, class_weight = weights, kernel = kernel, gamma = gamma)
     
 
-def mlp(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1):
-    return MLPClassifier(solver=solver, alpha=alpha, hidden_layer_sizes=hidden_layer_sizes, random_state=random_state)
+def mlp(solver='adam', alpha=0.0001, hidden_layer_sizes=(100, 8), random_state=1, max_iter=1000):
+    return MLPClassifier(solver=solver, alpha=alpha, hidden_layer_sizes=hidden_layer_sizes, random_state=random_state, max_iter=max_iter, learning_rate="adaptive")
     
 
-def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, number_of_random, global_threshold):
+def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, number_of_random, global_threshold=0.5):
     scores = {
         "genuine": [],
         "skilled": [],
