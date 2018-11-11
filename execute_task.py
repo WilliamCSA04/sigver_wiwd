@@ -33,7 +33,8 @@ train_set = {
 results = {
     "svm_linear": [[], [], [], [], [], [], [], [], [], []],
     "mlp": [[], [], [], [], [], [], [], [], [], []],
-    "knn": [[], [], [], [], [], [], [], [], [], []]
+    "knn": [[], [], [], [], [], [], [], [], [], []],
+    "tree": [[], [], [], [], [], [], [], [], [], []],
 }
 
 svm = None
@@ -230,3 +231,21 @@ print("EER: " + str(standard_deviation(results["knn"][3])))
 print("EER_userthresholds: " + str(standard_deviation(results["knn"][4])))
 print("AUC: " + str(standard_deviation(results["knn"][5])))
 print("Threshold: " + str(standard_deviation(results["knn"][6])))
+
+print("Results TREE: ")
+print("===AVG===: ")
+print("FRR: " + str(average(results["tree"][0])))
+print("FAR_SKILLED: " + str(average(results["tree"][1])))
+print("FAR_RANDOM: " + str(average(results["tree"][2])))
+print("EER: " + str(average(results["tree"][3])))
+print("EER_userthresholds: " + str(average(results["tree"][4])))
+print("AUC: " + str(average(results["tree"][5])))
+print("Threshold: " + str(average(results["tree"][6])))
+print("===SD===: ")
+print("FRR: " + str(standard_deviation(results["tree"][0])))
+print("FAR_SKILLED: " + str(standard_deviation(results["tree"][1])))
+print("FAR_RANDOM: " + str(standard_deviation(results["tree"][2])))
+print("EER: " + str(standard_deviation(results["tree"][3])))
+print("EER_userthresholds: " + str(standard_deviation(results["tree"][4])))
+print("AUC: " + str(standard_deviation(results["tree"][5])))
+print("Threshold: " + str(standard_deviation(results["tree"][6])))
