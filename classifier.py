@@ -14,7 +14,7 @@ def knn(k = 7, weight='distance', algorithm="ball_tree", n_jobs=-1):
 
 
 def tree(weights):
-    return treeClassifier.DecisionTreeClassifier(class_weight=weights, presort=True, random_state=10, max_features="log2")
+    return treeClassifier.DecisionTreeClassifier(class_weight=weights, presort=True, max_features="log2")
     
 
 def svm(gamma='auto', weights = None, kernel="linear"):
