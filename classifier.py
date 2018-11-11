@@ -8,9 +8,8 @@ import numpy as np
 import sklearn.metrics as sk_metrics
 from typing import List, Tuple, Dict
 
-def knn(data_train, train_classes, k = 1, weight='uniform'):
-    clf = neighbors.KNeighborsClassifier(k, weights=weight)
-    return clf.fit(data_train, train_classes)
+def knn(k = 3, weight='distance'):
+    return neighbors.KNeighborsClassifier(k, weights=weight)
 
 
 
