@@ -58,6 +58,8 @@ svc = classifier.svm(gamma = svm["gamma"], weights = weights, kernel=svm_kernel)
 print(svc)
 mlp = classifier.mlp()
 print(mlp)
+knn = classifier.knn()
+print(knn)
 
 random_users = get_signature_folders(config["dataset_for_random_path"])
 print("Loading list for random users to train")
