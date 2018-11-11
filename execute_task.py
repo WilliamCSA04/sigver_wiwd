@@ -36,6 +36,7 @@ train_set = {
 
 results = {
     "svm_linear": [[], [], [], [], [], [], []],
+    "svm_rbf": [[], [], [], [], [], [], []],
     "mlp": [[], [], [], [], [], [], []],
     "knn": [[], [], [], [], [], [], []],
     "tree": [[], [], [], [], [], [], []],
@@ -59,8 +60,10 @@ list_of_signatures_use_on_train = []
 list_of_signatures_use_on_test = []
 
 weights = {1: config["c-plus"], 0: svm["c-minus"]}
-svc_linear = classifier.svm(gamma = svm["gamma"], weights = weights, kernel=svm_kernel)
+svc_linear = classifier.svm(gamma = 'auto', weights = weights, kernel="linear")
 print(svc_linear)
+svc_rbf = classifier.svm(gamma = 2**(-11), weights = weights, kernel="rbf")
+print(svc_rbf)
 mlp = classifier.mlp()
 print(mlp)
 knn = classifier.knn()
@@ -111,6 +114,7 @@ for user in train_genuine_users:
         train_classes.append(0)
     c_plus = len(train_set["random"])/len(train_set["genuines"])
     clf_svm_linear = svc_linear.fit(data_train, train_classes)
+    clf_svm_rbf = svc_rbf.fit(data_train, train_classes)
     clf_mlp = mlp.fit(data_train, train_classes)
     clf_knn = knn.fit(data_train, train_classes)
     clf_tree = tree.fit(data_train, train_classes)
@@ -167,14 +171,22 @@ for user in train_genuine_users:
     results["mlp"][4] += (partial_results[4])
     results["mlp"][5] += (partial_results[5])       
     results["mlp"][6] += (partial_results[6])       
-    partial_results = classifier.test(clf_svm_linear, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], svm["global_threshhold"])
+    partial_results = classifier.test(clf_svm_linear, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"])
     results["svm_linear"][0] += (partial_results[0])
     results["svm_linear"][1] += (partial_results[1])
     results["svm_linear"][2] += (partial_results[2])
     results["svm_linear"][3] += (partial_results[3])
     results["svm_linear"][4] += (partial_results[4])
     results["svm_linear"][5] += (partial_results[5])       
-    results["svm_linear"][6] += (partial_results[6])  
+    results["svm_linear"][6] += (partial_results[6])
+    partial_results = classifier.test(clf_svm_rbf, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"])
+    results["svm_rbf"][0] += (partial_results[0])
+    results["svm_rbf"][1] += (partial_results[1])
+    results["svm_rbf"][2] += (partial_results[2])
+    results["svm_rbf"][3] += (partial_results[3])
+    results["svm_rbf"][4] += (partial_results[4])
+    results["svm_rbf"][5] += (partial_results[5])       
+    results["svm_rbf"][6] += (partial_results[6])   
     partial_results = classifier.test(clf_knn, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"])
     results["knn"][0] += (partial_results[0])
     results["knn"][1] += (partial_results[1])
@@ -212,7 +224,7 @@ print("EER_userthresholds: " + str(standard_deviation(results["mlp"][4])))
 print("AUC: " + str(standard_deviation(results["mlp"][5])))
 print("Threshold: " + str(standard_deviation(results["mlp"][6])))
 
-print("Results SVM: ")
+print("Results SVM LINEAR: ")
 print("===AVG===: ")
 print("FRR: " + str(average(results["svm_linear"][0])))
 print("FAR_SKILLED: " + str(average(results["svm_linear"][1])))
@@ -229,6 +241,24 @@ print("EER: " + str(standard_deviation(results["svm_linear"][3])))
 print("EER_userthresholds: " + str(standard_deviation(results["svm_linear"][4])))
 print("AUC: " + str(standard_deviation(results["svm_linear"][5])))
 print("Threshold: " + str(standard_deviation(results["svm_linear"][6])))
+
+print("Results SVM RBF: ")
+print("===AVG===: ")
+print("FRR: " + str(average(results["svm_rbf"][0])))
+print("FAR_SKILLED: " + str(average(results["svm_rbf"][1])))
+print("FAR_RANDOM: " + str(average(results["svm_rbf"][2])))
+print("EER: " + str(average(results["svm_rbf"][3])))
+print("EER_userthresholds: " + str(average(results["svm_rbf"][4])))
+print("AUC: " + str(average(results["svm_rbf"][5])))
+print("Threshold: " + str(average(results["svm_rbf"][6])))
+print("===SD===: ")
+print("FRR: " + str(standard_deviation(results["svm_rbf"][0])))
+print("FAR_SKILLED: " + str(standard_deviation(results["svm_rbf"][1])))
+print("FAR_RANDOM: " + str(standard_deviation(results["svm_rbf"][2])))
+print("EER: " + str(standard_deviation(results["svm_rbf"][3])))
+print("EER_userthresholds: " + str(standard_deviation(results["svm_rbf"][4])))
+print("AUC: " + str(standard_deviation(results["svm_rbf"][5])))
+print("Threshold: " + str(standard_deviation(results["svm_rbf"][6])))
 
 print("Results KNN: ")
 print("===AVG===: ")
