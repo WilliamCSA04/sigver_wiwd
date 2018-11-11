@@ -213,7 +213,7 @@ print("EER_userthresholds: " + str(standard_deviation(results["svm_linear"][4]))
 print("AUC: " + str(standard_deviation(results["svm_linear"][5])))
 print("Threshold: " + str(standard_deviation(results["svm_linear"][6])))
 
-print("Results SVM: ")
+print("Results KNN: ")
 print("===AVG===: ")
 print("FRR: " + str(average(results["knn"][0])))
 print("FAR_SKILLED: " + str(average(results["knn"][1])))
