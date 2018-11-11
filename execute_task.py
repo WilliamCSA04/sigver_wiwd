@@ -55,8 +55,8 @@ list_of_signatures_use_on_train = []
 list_of_signatures_use_on_test = []
 
 weights = {1: config["c-plus"], 0: svm["c-minus"]}
-svc = classifier.svm(gamma = svm["gamma"], weights = weights, kernel=svm_kernel)
-print(svc)
+svc_linear = classifier.svm(gamma = svm["gamma"], weights = weights, kernel=svm_kernel)
+print(svc_linear)
 mlp = classifier.mlp()
 print(mlp)
 knn = classifier.knn()
@@ -106,7 +106,7 @@ for user in train_genuine_users:
     for i in train_set["random"]:
         train_classes.append(0)
     c_plus = len(train_set["random"])/len(train_set["genuines"])
-    clf_svm = svc.fit(data_train, train_classes)
+    clf_svm = svc_linear.fit(data_train, train_classes)
     clf_mlp = mlp.fit(data_train, train_classes)
     clf_knn = knn.fit(data_train, train_classes)
     clf_tree = tree.fit(data_train, train_classes)
