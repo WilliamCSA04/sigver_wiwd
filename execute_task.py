@@ -105,6 +105,7 @@ for user in train_genuine_users:
     c_plus = len(train_set["random"])/len(train_set["genuines"])
     clf_svm = svc.fit(data_train, train_classes)
     clf_mlp = mlp.fit(data_train, train_classes)
+    clf_knn = knn.fit(data_train, train_classes)
     test_sets = []
     print(c_plus)
     for time in range(0, config["number_of_tests_by_user"]):
@@ -166,6 +167,14 @@ for user in train_genuine_users:
     results["svm_linear"][4] += (partial_results[4])
     results["svm_linear"][5] += (partial_results[5])       
     results["svm_linear"][6] += (partial_results[6])  
+    partial_results = classifier.test(clf_knn, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"])
+    results["knn"][0] += (partial_results[0])
+    results["knn"][1] += (partial_results[1])
+    results["knn"][2] += (partial_results[2])
+    results["knn"][3] += (partial_results[3])
+    results["knn"][4] += (partial_results[4])
+    results["knn"][5] += (partial_results[5])       
+    results["knn"][6] += (partial_results[6])  
 
 print(results)
 print("Results MLP: ")
