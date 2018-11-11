@@ -20,6 +20,10 @@ elif dataset.lower() == "gpds300":
     from gpds_dataset_config import gpds300_config
     config = gpds300_config()
     print("Get GPDS-300 configurations")
+elif dataset.lower() == "gpds50":
+    from gpds_dataset_config import gpds50_config
+    config = gpds50_config()
+    print("Get GPDS-50 configurations")
 else:
     print("Error: No valid dataset selected")
     exit()
@@ -188,6 +192,7 @@ for user in train_genuine_users:
     results["tree"][5] += (partial_results[5])       
     results["tree"][6] += (partial_results[6])  
 
+print("results")
 print(results)
 print("Results MLP: ")
 print("===AVG===: ")

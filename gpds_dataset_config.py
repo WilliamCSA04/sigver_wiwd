@@ -62,3 +62,27 @@ def gpds300_config():
         "svm_rbf": svm_rbf
     }
     return config
+
+def gpds50_config():
+    config = {
+        "dataset_path": "datasets/gpds50/",
+        "dataset_for_random_path": "datasets/gpds300/",
+        "train_config": {
+            "genuine": 14,
+            "skilled": 0,
+            "random": 14
+        },
+        "test_config": {
+            "genuine": 10,
+            "skilled": 10,
+            "random": 10
+        },
+        "c-plus": 300,
+        "signature_numbers_by_user": signature_numbers_by_user,
+        "number_of_tests_by_user": 100,
+        "max_image_size": (819, 1137),
+        "canvas": (952, 1360),
+        "svm_linear": svm_linear,
+        "svm_rbf": svm_rbf
+    }
+    return config
