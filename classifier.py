@@ -33,10 +33,9 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
     }    
     for test_set in test_sets:
         prediction_probability = clf.predict_proba(test_set)
-        all_genuine_scores = prediction_probability[:,1]
-        all_forgery_scores = prediction_probability[:,0]
-        genuine_scores = all_genuine_scores[:number_of_genuine]
-        forgery_scores = all_forgery_scores[number_of_genuine:]
+        scores_prob = prediction_probability[:,1]
+        genuine_scores = scores_prob[:number_of_genuine]
+        forgery_scores = scores_prob[number_of_genuine:]
         skilled_scores = forgery_scores[:number_of_skilled]
         random_scores = forgery_scores[number_of_skilled:]
         scores["genuine"].append(genuine_scores)
