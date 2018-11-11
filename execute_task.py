@@ -61,6 +61,8 @@ mlp = classifier.mlp()
 print(mlp)
 knn = classifier.knn()
 print(knn)
+tree = classifier.tree(weights = weights)
+print(tree)
 
 random_users = get_signature_folders(config["dataset_for_random_path"])
 print("Loading list for random users to train")
@@ -107,6 +109,7 @@ for user in train_genuine_users:
     clf_svm = svc.fit(data_train, train_classes)
     clf_mlp = mlp.fit(data_train, train_classes)
     clf_knn = knn.fit(data_train, train_classes)
+    clf_tree = tree.fit(data_train, train_classes)
     test_sets = []
     print(c_plus)
     for time in range(0, config["number_of_tests_by_user"]):
@@ -176,6 +179,14 @@ for user in train_genuine_users:
     results["knn"][4] += (partial_results[4])
     results["knn"][5] += (partial_results[5])       
     results["knn"][6] += (partial_results[6])  
+    partial_results = classifier.test(clf_tree, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"])
+    results["tree"][0] += (partial_results[0])
+    results["tree"][1] += (partial_results[1])
+    results["tree"][2] += (partial_results[2])
+    results["tree"][3] += (partial_results[3])
+    results["tree"][4] += (partial_results[4])
+    results["tree"][5] += (partial_results[5])       
+    results["tree"][6] += (partial_results[6])  
 
 print(results)
 print("Results MLP: ")

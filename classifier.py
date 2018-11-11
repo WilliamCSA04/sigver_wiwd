@@ -13,9 +13,8 @@ def knn(k = 7, weight='distance', algorithm="ball_tree", n_jobs=-1):
 
 
 
-def tree(data_train, train_classes):
-    clf = treeClassifier.DecisionTreeClassifier()
-    return clf.fit(data_train, train_classes)
+def tree(weights):
+    return treeClassifier.DecisionTreeClassifier(class_weight=weights, presort=True, random_state=10, max_features="log2")
     
 
 def svm(gamma='auto', weights = None, kernel="linear"):
@@ -37,15 +36,9 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
         all_genuine_scores = prediction_probability[:,1]
         all_forgery_scores = prediction_probability[:,0]
         genuine_scores = all_genuine_scores[:number_of_genuine]
-        print("genuine_scores")
-        print(genuine_scores)
         forgery_scores = all_genuine_scores[number_of_genuine:]
         skilled_scores = forgery_scores[:number_of_skilled]
-        print("skilled_scores")
-        print(skilled_scores)
         random_scores = forgery_scores[number_of_skilled:]
-        print("random_scores")
-        print(random_scores)
         scores["genuine"].append(genuine_scores)
         scores["skilled"].append(skilled_scores)
         scores["random"].append(random_scores)
