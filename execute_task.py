@@ -106,7 +106,7 @@ for user in train_genuine_users:
     for i in train_set["random"]:
         train_classes.append(0)
     c_plus = len(train_set["random"])/len(train_set["genuines"])
-    clf_svm = svc_linear.fit(data_train, train_classes)
+    clf_svm_linear = svc_linear.fit(data_train, train_classes)
     clf_mlp = mlp.fit(data_train, train_classes)
     clf_knn = knn.fit(data_train, train_classes)
     clf_tree = tree.fit(data_train, train_classes)
@@ -163,7 +163,7 @@ for user in train_genuine_users:
     results["mlp"][4] += (partial_results[4])
     results["mlp"][5] += (partial_results[5])       
     results["mlp"][6] += (partial_results[6])       
-    partial_results = classifier.test(clf_svm, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], svm["global_threshhold"])
+    partial_results = classifier.test(clf_svm_linear, test_sets, test_classes, test_config["genuine"], test_config["skilled"], test_config["random"], svm["global_threshhold"])
     results["svm_linear"][0] += (partial_results[0])
     results["svm_linear"][1] += (partial_results[1])
     results["svm_linear"][2] += (partial_results[2])
