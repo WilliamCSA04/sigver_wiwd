@@ -44,7 +44,6 @@ def test(clf, test_sets, test_classes, number_of_genuine, number_of_skilled, num
         scores["random"].append(random_scores)
     results = [[], [], [], [], [], [], []]
     result = compute_metrics(scores["genuine"], scores["random"], scores["skilled"], global_threshold)
-    print(result)
     results[0].append(result['FRR'])
     results[1].append(result['FAR_skilled'])
     results[2].append(result['FAR_random'])
