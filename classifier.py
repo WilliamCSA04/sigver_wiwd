@@ -8,7 +8,7 @@ import numpy as np
 import sklearn.metrics as sk_metrics
 from typing import List, Tuple, Dict
 
-def knn(k = 7, weight='distance', algorithm="ball_tree", n_jobs=-1):
+def knn(k = 7, weight='distance', algorithm="auto", n_jobs=-1):
     return neighbors.KNeighborsClassifier(k, weights=weight, algorithm=algorithm, n_jobs=n_jobs)
 
 
