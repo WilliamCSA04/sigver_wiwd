@@ -68,7 +68,7 @@ mlp = classifier.mlp(0.0001, (100, 500))
 print(mlp)
 knn = classifier.knn(3, "uniform")
 print(knn)
-tree = classifier.tree(weights, "log2", "gini", 0.1)
+tree = classifier.tree(weights, "log2", "gini", 0.0000001)
 print(tree)
 
 random_users = get_signature_folders(config["dataset_for_random_path"])
