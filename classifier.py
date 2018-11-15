@@ -8,20 +8,20 @@ import numpy as np
 import sklearn.metrics as sk_metrics
 from typing import List, Tuple, Dict
 
-def knn(k = 7, weight='distance', algorithm="auto", n_jobs=-1):
+def knn(k, weight, algorithm="auto", n_jobs=-1):
     return neighbors.KNeighborsClassifier(k, weights=weight, algorithm=algorithm, n_jobs=n_jobs)
 
 
 
-def tree(weights):
-    return treeClassifier.DecisionTreeClassifier(class_weight=weights, presort=True, max_features="log2")
+def tree(weights, max_features, criterion, min_impurity_split):
+    return treeClassifier.DecisionTreeClassifier(class_weight=weights, max_features=max_features, criterion=criterion, min_impurity_split=min_impurity_split)
     
 
 def svm(gamma='auto', weights = None, kernel="linear"):
     return svmClassifier.SVC(probability=True, class_weight = weights, kernel = kernel, gamma = gamma)
     
 
-def mlp(solver='adam', alpha=0.0001, hidden_layer_sizes=(100, 8), random_state=1, max_iter=1000):
+def mlp(alpha, hidden_layer_sizes, solver='adam', random_state=1, max_iter=1000):
     return MLPClassifier(solver=solver, alpha=alpha, hidden_layer_sizes=hidden_layer_sizes, random_state=random_state, max_iter=max_iter, learning_rate="adaptive")
     
 
