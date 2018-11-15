@@ -13,8 +13,8 @@ def knn(k, weight, algorithm="auto", n_jobs=-1):
 
 
 
-def tree(weights, max_features, criterion, min_impurity_split):
-    return treeClassifier.DecisionTreeClassifier(class_weight=weights, max_features=max_features, criterion=criterion, min_impurity_split=min_impurity_split)
+def tree(weights, max_features, criterion, min_impurity_decrease):
+    return treeClassifier.DecisionTreeClassifier(class_weight=weights, max_features=max_features, criterion=criterion, min_impurity_decrease=min_impurity_decrease)
     
 
 def svm(gamma='auto', weights = None, kernel="linear"):
